@@ -29,6 +29,7 @@ dotnet run
 | `CLIPDECK_BACKUP_DIR` | Verilen geçmişi yedekleyip boş bir geçmişe geri yükler; süre ve belleği yazar |
 | `CLIPDECK_DEMO_DIR` | Ekran görüntüleri için küçük ve gerçekçi bir geçmiş üretir |
 | `CLIPDECK_DOWNGRADE_DIR` | Bir veritabanını eski (sürüm 1) biçime çevirir; geçiş süresini ölçmek için |
+| `CLIPDECK_PANO_TESTI=1` | Gerçek panoyu kullanan testleri (`ClipboardTests`) açar. Panonun içeriği değişir; çalışan clipdeck'i önce kapat, yoksa test verisini geçmişine kaydeder |
 
 ```powershell
 $env:CLIPDECK_SEED_DIR = "$env:TEMP\clipdeck-yuk"

@@ -179,10 +179,12 @@ internal static class ClipboardIo
         uint n = DragQueryFileW(h, 0xFFFFFFFF, null, 0);
         if (n == 0) return null;
         var list = new string[n];
+        var sb = new StringBuilder(260);
         for (uint i = 0; i < n; i++)
         {
             uint len = DragQueryFileW(h, i, null, 0);
-            var sb = new StringBuilder((int)len + 1);
+            sb.Clear();
+            sb.EnsureCapacity((int)len + 1);
             DragQueryFileW(h, i, sb, len + 1);
             list[i] = sb.ToString();
         }

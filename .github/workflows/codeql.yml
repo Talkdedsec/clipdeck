@@ -25,7 +25,8 @@ jobs:
         with:
           languages: csharp
           build-mode: manual
-          queries: security-and-quality
+          # Security queries only: the quality suite mostly flags generated code (regex source generator, XAML).
+          queries: security-extended
 
       - name: Derle
         run: dotnet build clipdeck.csproj -c Release

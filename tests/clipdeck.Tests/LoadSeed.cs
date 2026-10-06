@@ -101,7 +101,7 @@ public class LoadSeed(ITestOutputHelper output)
         output.WriteLine("tanıtım verisi hazır: " + dir);
     }
 
-    static T OnSta<T>(Func<T> work)
+    internal static T OnSta<T>(Func<T> work)
     {
         T result = default!;
         Exception? error = null;
