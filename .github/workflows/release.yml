@@ -1,0 +1,88 @@
+name: Sürüm
+
+# A "vX.Y.Z" tag builds, tests and publishes the release with notes from CHANGELOG.md.
+# Run by hand, it only builds the package and the notes as an artifact (a dry run).
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Test
+        run: dotnet test tests/clipdeck.Tests/clipdeck.Tests.csproj -c Release
+
+      - name: Paketle
+        run: ./build.ps1
+        shell: pwsh
+
+      - name: Sürüm notlarını hazırla
+        id: notes
+        shell: pwsh
+        run: |
+          $version = ([xml](Get-Content clipdeck.csproj -Raw)).Project.PropertyGroup.Version | Where-Object { $_ } | Select-Object -First 1
+          if ($env:GITHUB_REF_TYPE -eq 'tag' -and $env:GITHUB_REF_NAME -ne "v$version") {
+            throw "Etiket ($env:GITHUB_REF_NAME) ile clipdeck.csproj sürümü (v$version) uyuşmuyor."
+          }
+          $log = (Get-Content CHANGELOG.md -Raw -Encoding utf8) -replace "`r", ""
+          $m = [regex]::Match($log, "(?ms)^## $([regex]::Escape($version))\b[^\n]*\n(.*?)(?=^## |\z)")
+          if (-not $m.Success) { throw "CHANGELOG.md içinde '## $version' bölümü yok." }
+          $sums = foreach ($f in 'clipdeck-kurulum.exe', 'clipdeck.exe') {
+            '{0}  {1}' -f (Get-FileHash "dist/$f" -Algorithm SHA256).Hash.ToLowerInvariant(), $f
+          }
+          $lines = @(
+            $m.Groups[1].Value.Trim()
+            ''
+            '### Kurulum'
+            ''
+            '1. Yüklü değilse [.NET 10 Masaüstü Çalışma Zamanı](https://dotnet.microsoft.com/download/dotnet/10.0)''nı kur.'
+            '2. `clipdeck-kurulum.exe`''yi indirip çalıştır ve **Kur**''a bas (yönetici izni gerekmez). Önceki sürüm kuruluysa **Güncelle** çıkar; geçmiş ve ayarlar korunur.'
+            '3. SmartScreen uyarırsa: **Ek bilgi → Yine de çalıştır** (dosya imzasız).'
+            ''
+            'Pencere açmadan güncellemek için: `clipdeck-kurulum.exe --sessiz`'
+            '`clipdeck.exe` kurulumsuz (taşınabilir) çalıştırmak içindir.'
+            ''
+            '### SHA-256'
+            ''
+            '```'
+            $sums
+            '```'
+          )
+          Set-Content release-notes.md ($lines -join "`n") -Encoding utf8
+          "version=$version" >> $env:GITHUB_OUTPUT
+          Get-Content release-notes.md
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: clipdeck-${{ steps.notes.outputs.version }}
+          path: |
+            dist/clipdeck.exe
+            dist/clipdeck-kurulum.exe
+            release-notes.md
+
+      - name: Yayınla
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.notes.outputs.version }}
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag dist/clipdeck-kurulum.exe dist/clipdeck.exe --clobber
+            gh release edit $tag --notes-file release-notes.md
+          } else {
+            gh release create $tag dist/clipdeck-kurulum.exe dist/clipdeck.exe --title "clipdeck $env:VERSION" --notes-file release-notes.md --verify-tag
+          }

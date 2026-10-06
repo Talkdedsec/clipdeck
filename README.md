@@ -8,6 +8,7 @@
 Win+V ve Win+. yerine geçer; kopyaladığın her şeyi bulur, temizler, dönüştürür ve imlecin olduğu yere yapıştırır.
 
 [![Derleme](https://github.com/Talkdedsec/clipdeck/actions/workflows/build.yml/badge.svg)](https://github.com/Talkdedsec/clipdeck/actions/workflows/build.yml)
+[![CodeQL](https://github.com/Talkdedsec/clipdeck/actions/workflows/codeql.yml/badge.svg)](https://github.com/Talkdedsec/clipdeck/actions/workflows/codeql.yml)
 [![Sürüm](https://img.shields.io/github/v/release/Talkdedsec/clipdeck?label=s%C3%BCr%C3%BCm)](https://github.com/Talkdedsec/clipdeck/releases/latest)
 ![Platform](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4)
@@ -17,6 +18,22 @@ Win+V ve Win+. yerine geçer; kopyaladığın her şeyi bulur, temizler, dönü�
 <img src="docs/img/tema.png" width="320" alt="Arka plan fotoğraflı pano geçmişi">&nbsp;&nbsp;<img src="docs/img/emoji-tema.png" width="320" alt="Renkli emoji seçici">
 
 </div>
+
+## Neden clipdeck?
+
+| | Windows Win+V | clipdeck |
+| --- | :---: | :---: |
+| Geçmişte tutulan öğe | 25 | sınırsız (istersen sınır koy) |
+| Yeniden başlatınca | yalnızca sabitlenenler kalır | hepsi kalır |
+| Dosya kopyaları | — | ✓ |
+| Öğe boyutu | 4 MB'a kadar | 64 MB'a kadar |
+| Resimdeki yazıyla arama (OCR) | — | ✓ |
+| Büyük önizleme | — | ✓ |
+| Değişkenli snippet'ler | — | ✓ |
+| Dönüştürerek yapıştırma, link temizleme | — | ✓ |
+| Kart, IBAN, token maskeleme | — | ✓ |
+| Parolalı, şifreli yedek | — | ✓ |
+| Cihazlar arası eşitleme | ✓ (Microsoft hesabıyla) | — (veri bilgisayarında kalır) |
 
 ## Özellikler
 
@@ -95,6 +112,23 @@ Dosya imzasız olduğu için SmartScreen uyarı verebilir: **Ek bilgi → Yine d
 | Menü tuşu, Shift+F10, sağ tık | Öğe menüsü (dönüştür, link temizle…) |
 | Emoji: oklar, Enter, Shift+Enter | Gez, ekle, ekle ve panel açık kalsın |
 
+## Sık sorulanlar
+
+**Verilerim nerede, başka bilgisayara nasıl taşırım?**
+`%LOCALAPPDATA%\clipdeck` klasöründe, şifreli olarak. Anahtar Windows hesabına bağlı olduğu için klasörü kopyalamak yetmez; Ayarlar → Veri → **Yedekle** ile parolalı bir yedek al, diğer bilgisayarda **Geri yükle**.
+
+**Windows'un kendi Win+V'si ne oluyor?**
+clipdeck tuşu yakalar; Windows'unki açılmaz. Ayarlarda **Win+V'yi devral** kapatılırsa Windows'unki geri gelir ve clipdeck'i tepsi simgesinden açarsın. Win+. için de ayrı bir seçenek var.
+
+**Parola yöneticisinden kopyaladığım parolalar kaydedilir mi?**
+Hayır. Parola yöneticilerinin koyduğu "geçmişe ekleme" işaretine uyulur ve KeePass, Bitwarden, 1Password gibi uygulamalar varsayılan olarak hariç tutulur. Listeyi ayarlardan düzenleyebilirsin.
+
+**Yönetici olarak çalışan bir programa yapıştıramıyorum.**
+Windows, normal bir programın yönetici programlara tuş göndermesini engeller. Ayarlar → **Yönetici olarak çalıştır** ile clipdeck de yönetici olarak başlar. Elle açarken UAC onayı istenir; Windows açılınca başlatma ise zamanlanmış görevle, onaysız yapılır.
+
+**Neden .NET çalışma zamanı gerekiyor?**
+Böylece program ~29 MB kalıyor; çalışma zamanını içine gömmek boyutu ~190 MB'a çıkarırdı.
+
 ## Kaynaktan derleme
 
 Gerekenler: Windows 10 (2004) ya da 11, [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
@@ -106,7 +140,7 @@ dotnet test tests\clipdeck.Tests\clipdeck.Tests.csproj   # testler
 ```
 
 Geliştirirken gerçek geçmişine dokunmamak için `CLIPDECK_DATA` ortam değişkeniyle ayrı bir veri klasörü verebilirsin.
-`tests\clipdeck.Tests\LoadSeed.cs` büyük geçmiş yük testi ve tanıtım verisi üretir (ortam değişkenleriyle çalışır, açıklaması dosyada).
+`tests\clipdeck.Tests\LoadSeed.cs` büyük geçmiş yük testi ve tanıtım verisi üretir. Ayrıntılar, kod kuralları ve sürüm çıkarma adımları [katkı rehberinde](CONTRIBUTING.md).
 
 ```
 App.xaml(.cs)   başlangıç, tek örnek, tepsi, ayarların uygulanması
@@ -124,11 +158,15 @@ docs\           web sitesi (GitHub Pages)
 - Emoji adları: [Unicode CLDR](https://cldr.unicode.org/) (Unicode License)
 - Metin tanıma: Windows'un yerleşik OCR motoru
 
+[Değişiklikler](CHANGELOG.md) · [Katkı rehberi](CONTRIBUTING.md) · [Güvenlik](SECURITY.md)
+
 ---
 
 ## English
 
 **clipdeck** is a fast, encrypted clipboard history and emoji / kaomoji / symbol picker for Windows that replaces Win+V and Win+. .
+
+Compared with the built-in Win+V (25 items, cleared on restart except pinned ones, no files, 4 MB per item), clipdeck keeps an unlimited history across restarts, handles files and items up to 64 MB, and adds OCR search, a large preview, snippets, transforms, sensitive-data masking and encrypted backups. It does not sync between devices: your data stays on your PC.
 
 - **Clipboard history:** text, images and files, unlimited and deduplicated; instant search (including text inside images via OCR); type and app filters; code highlighting and colour swatches; large preview (Space / F3); multi-select paste; pinning; Ctrl+1…9 quick paste; paste as plain text or transformed (case, whitespace, sort lines, JSON, URL, Base64).
 - **Snippets** with variables: `{date}` `{time}` `{datetime}` `{day}` `{month}` `{year}` `{clipboard}` `{guid}` `{cursor}`.

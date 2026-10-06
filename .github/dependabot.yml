@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directories: ["/", "/tests/clipdeck.Tests"]
+    schedule:
+      interval: weekly
+    groups:
+      nuget:
+        patterns: ["*"]
+    commit-message:
+      prefix: "bağımlılık"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "CI"
