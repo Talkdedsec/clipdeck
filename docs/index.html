@@ -155,6 +155,11 @@
   tr:last-child td { border-bottom: 0; }
   .table-card { padding: 6px 8px; }
   .vars { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .compare th { text-align: left; padding: 12px 14px; font-size: 14px; color: var(--dim); font-weight: 600; border-bottom: 1px solid var(--card-line); }
+  .compare th:last-child { color: var(--accent); }
+  .compare td:first-child { width: 38%; color: var(--text); }
+  .compare td { color: var(--dim); }
+  .compare td.yes { color: #7ee8d8; font-weight: 600; }
   .vars code { padding: 3px 9px; border-radius: 8px; background: rgba(155, 135, 255, 0.12); color: #d5ccff; }
 
   /* steps */
@@ -272,6 +277,31 @@
           <h3 data-en="Make it yours">Sana göre</h3>
           <p data-en="Dark or light, any accent colour, a blurred background photo, card opacity and panel size. Turkish and English UI.">Koyu ya da açık, istediğin vurgu rengi, bulanık arka plan fotoğrafı, kart saydamlığı ve panel boyutu. Türkçe ve İngilizce arayüz.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="karsilastirma">
+    <div class="wrap">
+      <h2 data-en="Compared with Win+V">Win+V ile karşılaştırma</h2>
+      <p class="sub" data-en="The panel built into Windows is fine for the last few copies. clipdeck is for everything after that.">Windows'un kendi paneli son birkaç kopya için yeterli. clipdeck ondan sonrası için.</p>
+      <div class="card table-card compare">
+        <table>
+          <thead>
+            <tr><th></th><th>Windows Win+V</th><th>clipdeck</th></tr>
+          </thead>
+          <tbody>
+            <tr><td data-en="Items kept">Tutulan öğe</td><td>25</td><td class="yes" data-en="unlimited">sınırsız</td></tr>
+            <tr><td data-en="After a restart">Yeniden başlatınca</td><td data-en="only pinned items stay">yalnızca sabitlenenler kalır</td><td class="yes" data-en="everything stays">hepsi kalır</td></tr>
+            <tr><td data-en="Copied files">Dosya kopyaları</td><td>—</td><td class="yes">✓</td></tr>
+            <tr><td data-en="Item size">Öğe boyutu</td><td data-en="up to 4 MB">4 MB'a kadar</td><td class="yes" data-en="up to 64 MB">64 MB'a kadar</td></tr>
+            <tr><td data-en="Search text inside images">Resimdeki yazıyla arama</td><td>—</td><td class="yes">✓</td></tr>
+            <tr><td data-en="Preview, snippets, transforms">Önizleme, snippet, dönüştürme</td><td>—</td><td class="yes">✓</td></tr>
+            <tr><td data-en="Masking cards, IBANs, tokens">Kart, IBAN, token maskeleme</td><td>—</td><td class="yes">✓</td></tr>
+            <tr><td data-en="Encrypted backup">Şifreli yedek</td><td>—</td><td class="yes">✓</td></tr>
+            <tr><td data-en="Sync between devices">Cihazlar arası eşitleme</td><td data-en="✓ with a Microsoft account">✓ Microsoft hesabıyla</td><td data-en="— stays on your PC">— bilgisayarında kalır</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
