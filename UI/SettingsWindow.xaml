@@ -1,0 +1,232 @@
+<Window x:Class="ClipDeck.UI.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:ClipDeck.UI"
+        Title="{ui:T 'clipdeck ayarları'}" Width="600" Height="820" MinWidth="500" MinHeight="460"
+        WindowStartupLocation="CenterScreen" Icon="/Assets/clipdeck.ico"
+        Background="{DynamicResource Bg}" Foreground="{DynamicResource Text}"
+        FontFamily="{StaticResource UiFont}" FontSize="13" UseLayoutRounding="True">
+    <Window.Resources>
+        <Style x:Key="Section" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+        <Style x:Key="SettingsCard" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource Surface}"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="Margin" Value="0,0,0,18"/>
+        </Style>
+        <Style x:Key="Note" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextDim}"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="28,0,0,6"/>
+        </Style>
+        <Style x:Key="Label" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,12,0"/>
+            <Setter Property="Width" Value="120"/>
+        </Style>
+        <Style x:Key="Value" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextDim}"/>
+            <Setter Property="Margin" Value="12,0,0,0"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="22,18,22,0">
+            <StackPanel>
+                <TextBlock Style="{StaticResource Section}" Text="{ui:T Genel}"/>
+                <Border Style="{StaticResource SettingsCard}">
+                    <StackPanel>
+                        <CheckBox x:Name="TakeOverWinV" Content="{ui:T 'Win+V\'yi devral'}"/>
+                        <TextBlock Style="{StaticResource Note}" Text="{ui:T 'Kapalıyken Windows\'un kendi pano paneli açılır; clipdeck\'i tepsi simgesinden açarsın.'}"/>
+                        <CheckBox x:Name="TakeOverWinPeriod" Content="{ui:T 'Win+. ile emoji panelini aç'}"/>
+                        <CheckBox x:Name="StartWithWindows" Content="{ui:T 'Windows açılınca başlat'}"/>
+                        <CheckBox x:Name="MoveUsedToTop" Content="{ui:T 'Yapıştırdığım öğeyi listenin en üstüne taşı'}"/>
+                        <CheckBox x:Name="RunAsAdmin" Content="{ui:T 'Yönetici olarak çalıştır'}"/>
+                        <TextBlock Style="{StaticResource Note}" Text="{ui:T 'Yönetici olarak açılmış programlara da yapıştırabilmek için. Açılışta UAC onayı istenir; otomatik başlatma zamanlanmış görevle, onaysız yapılır.'}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,4">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T Dil}"/>
+                            <RadioButton x:Name="LangTr" Style="{StaticResource TabButton}" Content="Türkçe" GroupName="SettingsLang"/>
+                            <RadioButton x:Name="LangEn" Style="{StaticResource TabButton}" Content="English" GroupName="SettingsLang"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Style="{StaticResource Section}" Text="{ui:T Görünüm}"/>
+                <Border Style="{StaticResource SettingsCard}" Padding="16,14">
+                    <StackPanel>
+                        <Border x:Name="PreviewArea" Height="210" CornerRadius="6" Background="{DynamicResource Bg}" Margin="0,0,0,14" ClipToBounds="True">
+                            <Border x:Name="PreviewPanel" CornerRadius="8" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    BorderThickness="1" ClipToBounds="True">
+                                <Grid>
+                                    <Image x:Name="PreviewImage" Stretch="Fill"/>
+                                    <Rectangle x:Name="PreviewDim"/>
+                                    <Grid Margin="8">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border x:Name="PreviewTab" Width="26" Height="14" CornerRadius="3"/>
+                                            <Border Width="16" Height="14" Margin="4,0,0,0"/>
+                                        </StackPanel>
+                                        <Border x:Name="PreviewSearch" Grid.Row="1" Height="14" CornerRadius="3" Margin="0,6,0,6" BorderThickness="1"/>
+                                        <StackPanel Grid.Row="2">
+                                            <Border x:Name="PreviewCard1" Height="30" CornerRadius="4" Margin="0,0,0,4" BorderThickness="1.2">
+                                                <StackPanel Margin="6,6">
+                                                    <Border x:Name="PreviewLine1" Height="4" Width="70" CornerRadius="2" HorizontalAlignment="Left"/>
+                                                    <Border x:Name="PreviewLine2" Height="3" Width="40" CornerRadius="1.5" HorizontalAlignment="Left" Margin="0,5,0,0"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <Border x:Name="PreviewCard2" Height="30" CornerRadius="4" Margin="0,0,0,4"/>
+                                            <Border x:Name="PreviewCard3" Height="30" CornerRadius="4"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T Tema}"/>
+                            <RadioButton x:Name="ThemeSystem" Style="{StaticResource TabButton}" Content="{ui:T Sistem}" GroupName="SettingsTheme" Checked="Appearance_Changed"/>
+                            <RadioButton x:Name="ThemeDark" Style="{StaticResource TabButton}" Content="{ui:T Koyu}" GroupName="SettingsTheme" Checked="Appearance_Changed"/>
+                            <RadioButton x:Name="ThemeLight" Style="{StaticResource TabButton}" Content="{ui:T Açık}" GroupName="SettingsTheme" Checked="Appearance_Changed"/>
+                        </StackPanel>
+
+                        <DockPanel Margin="0,0,0,10">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Vurgu rengi'}" VerticalAlignment="Top" Margin="0,6,12,0"/>
+                            <WrapPanel x:Name="AccentPanel"/>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,0,0,10">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Arka plan'}"/>
+                            <Button DockPanel.Dock="Left" Style="{StaticResource DialogButton}" Content="{ui:T 'Fotoğraf seç…'}" Click="PickImage_Click"/>
+                            <Button x:Name="RemoveImageButton" DockPanel.Dock="Left" Style="{StaticResource DialogButton}" Content="{ui:T Kaldır}"
+                                    Margin="8,0,0,0" Click="RemoveImage_Click"/>
+                            <TextBlock x:Name="ImageName" Style="{StaticResource Value}" TextAlignment="Left" TextTrimming="CharacterEllipsis"/>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,2,0,6">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T Bulanıklık}"/>
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Value}" Width="46"
+                                       Text="{Binding Value, ElementName=BlurSlider, StringFormat={}{0:0}}"/>
+                            <Slider x:Name="BlurSlider" Minimum="0" Maximum="40" ValueChanged="Appearance_Changed"/>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,6">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T Karartma}"/>
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Value}" Width="46"
+                                       Text="{Binding Value, ElementName=DimSlider, StringFormat='%{0:0}'}"/>
+                            <Slider x:Name="DimSlider" Minimum="0" Maximum="90" ValueChanged="Appearance_Changed"/>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,6">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Kart opaklığı'}"/>
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Value}" Width="46"
+                                       Text="{Binding Value, ElementName=CardSlider, StringFormat='%{0:0}'}"/>
+                            <Slider x:Name="CardSlider" Minimum="20" Maximum="100" ValueChanged="Appearance_Changed"/>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,6">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Panel genişliği'}"/>
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Value}" Width="46"
+                                       Text="{Binding Value, ElementName=WidthSlider, StringFormat={}{0:0}}"/>
+                            <Slider x:Name="WidthSlider" Minimum="340" Maximum="720" TickFrequency="10" ValueChanged="Appearance_Changed"/>
+                        </DockPanel>
+                        <DockPanel Margin="0,0,0,4">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Panel yüksekliği'}"/>
+                            <TextBlock DockPanel.Dock="Right" Style="{StaticResource Value}" Width="46"
+                                       Text="{Binding Value, ElementName=HeightSlider, StringFormat={}{0:0}}"/>
+                            <Slider x:Name="HeightSlider" Minimum="420" Maximum="900" TickFrequency="10" ValueChanged="Appearance_Changed"/>
+                        </DockPanel>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Style="{StaticResource Section}" Text="{ui:T Kayıt}"/>
+                <Border Style="{StaticResource SettingsCard}">
+                    <StackPanel>
+                        <CheckBox x:Name="CaptureImages" Content="{ui:T 'Resimleri kaydet'}"/>
+                        <CheckBox x:Name="AutoOcr" Content="{ui:T 'Resimlerdeki yazıyı otomatik oku (OCR)'}"/>
+                        <TextBlock Style="{StaticResource Note}" Text="{ui:T 'Ekran görüntüsündeki yazılar aramada bulunur. Windows\'un yerleşik OCR\'ı kullanılır, internet gerekmez.'}"/>
+                        <CheckBox x:Name="CaptureFiles" Content="{ui:T 'Dosya kopyalamalarını kaydet'}"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Geçmiş sınırı'}"/>
+                            <TextBox x:Name="MaxItems" Width="90" Padding="8,5"/>
+                            <TextBlock Text="{ui:T 'öğe  (0 = sınırsız)'}" Foreground="{DynamicResource TextDim}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+                            <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Otomatik silme'}"/>
+                            <TextBox x:Name="MaxAgeDays" Width="90" Padding="8,5"/>
+                            <TextBlock Text="{ui:T 'günden eski öğeler  (0 = kapalı)'}" Foreground="{DynamicResource TextDim}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource Note}" Margin="0,2,0,6" Text="{ui:T 'Sabitlenen öğeler ve snippet\'ler bu sınırlara dahil değildir, hiç silinmez.'}"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Style="{StaticResource Section}" Text="{ui:T Gizlilik}"/>
+                <Border Style="{StaticResource SettingsCard}">
+                    <StackPanel>
+                        <CheckBox x:Name="RespectPrivacy" Content="{ui:T 'Şifre yöneticilerinin &quot;kaydetme&quot; işaretine uy'}"/>
+                        <TextBlock Style="{StaticResource Note}" Text="{ui:T 'KeePass, Bitwarden, 1Password gibi uygulamalar kopyaladıkları şifreleri işaretler; bu öğeler geçmişe hiç yazılmaz.'}"/>
+                        <TextBlock Text="{ui:T 'Kart numarası, IBAN, şifre ve anahtar gibi hassas veriler'}" Margin="0,8,0,4"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <RadioButton x:Name="SensMask" Style="{StaticResource TabButton}" Content="{ui:T Maskele}" GroupName="SettingsSensitive"/>
+                            <RadioButton x:Name="SensSkip" Style="{StaticResource TabButton}" Content="{ui:T 'Hiç kaydetme'}" GroupName="SettingsSensitive"/>
+                            <RadioButton x:Name="SensOff" Style="{StaticResource TabButton}" Content="{ui:T 'Normal göster'}" GroupName="SettingsSensitive"/>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource Note}" Margin="0,0,0,6" Text="{ui:T 'Maskelenen öğeler listede •••• 1234 gibi görünür ve aramada çıkmaz; yapıştırınca tam hali gider.'}"/>
+                        <TextBlock Text="{ui:T 'Linklerdeki izleme parametreleri (utm_, fbclid, gclid…)'}" Margin="0,8,0,4"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                            <RadioButton x:Name="LinkAuto" Style="{StaticResource TabButton}" Content="{ui:T 'Otomatik temizle'}" GroupName="SettingsLinks"/>
+                            <RadioButton x:Name="LinkMenu" Style="{StaticResource TabButton}" Content="{ui:T Menüden}" GroupName="SettingsLinks"/>
+                            <RadioButton x:Name="LinkOff" Style="{StaticResource TabButton}" Content="{ui:T Kapalı}" GroupName="SettingsLinks"/>
+                        </StackPanel>
+                        <TextBlock Style="{StaticResource Note}" Margin="0,0,0,6" Text="{ui:T 'Otomatik: tek başına kopyalanan link panoda da temizlenir. Menüden: sağ tık menüsünde &quot;temizleyip yapıştır&quot; seçeneği çıkar.'}"/>
+                        <TextBlock Text="{ui:T 'Hiç kaydedilmeyecek uygulamalar (her satıra bir işlem adı)'}" Margin="0,8,0,6"/>
+                        <TextBox x:Name="ExcludedApps" Height="96" AcceptsReturn="True" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto"
+                                 FontFamily="{StaticResource MonoFont}" FontSize="12"/>
+                        <TextBlock Style="{StaticResource Note}" Margin="0,8,0,4"
+                                   Text="{ui:T 'Geçmiş AES-256-GCM ile şifreli tutulur; anahtar yalnızca bu Windows hesabıyla açılabilir (DPAPI).'}"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Style="{StaticResource Section}" Text="{ui:T Veri}"/>
+                <Border Style="{StaticResource SettingsCard}">
+                    <StackPanel>
+                        <TextBlock x:Name="Stats" Foreground="{DynamicResource TextDim}" TextWrapping="Wrap" Margin="0,2,0,10"/>
+                        <WrapPanel>
+                            <Button Style="{StaticResource DialogButton}" Content="{ui:T 'Yedekle…'}" Click="Backup_Click" Margin="0,0,8,6"/>
+                            <Button Style="{StaticResource DialogButton}" Content="{ui:T 'Geri yükle…'}" Click="Restore_Click" Margin="0,0,8,6"/>
+                            <Button Style="{StaticResource DialogButton}" Content="{ui:T 'Klasörü aç'}" Click="OpenFolder_Click" Margin="0,0,8,6"/>
+                            <Button Style="{StaticResource DialogButton}" Content="{ui:T 'Geçmişi temizle'}" Click="Clear_Click" Margin="0,0,8,6"/>
+                        </WrapPanel>
+                        <TextBlock Style="{StaticResource Note}" Margin="0,4,0,4"
+                                   Text="{ui:T 'Yedek, kendi parolanla şifrelenmiş tek bir dosyadır; başka bir bilgisayara taşıyıp geri yükleyebilirsin.'}"/>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Style="{StaticResource Section}" Text="{ui:T Kısayollar}"/>
+                <Border Style="{StaticResource SettingsCard}">
+                    <TextBlock x:Name="ShortcutHelp" Foreground="{DynamicResource TextDim}" LineHeight="22" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Background="{DynamicResource Surface}" Padding="22,12">
+            <DockPanel LastChildFill="False">
+                <TextBlock x:Name="Version" DockPanel.Dock="Left" Foreground="{DynamicResource TextDim}" VerticalAlignment="Center"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource PrimaryButton}" Content="{ui:T Kaydet}" Click="Save_Click" Margin="8,0,0,0"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource DialogButton}" Content="{ui:T Kapat}" IsCancel="True"/>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>clipdeck — Windows için pano geçmişi ve emoji seçici</title>
+<meta name="description" content="Win+V ve Win+. yerine geçen, hızlı ve şifreli pano geçmişi; emoji, kaomoji ve sembol seçici.">
+<meta property="og:title" content="clipdeck">
+<meta property="og:description" content="Windows için hızlı ve şifreli pano geçmişi, emoji, kaomoji ve sembol seçici.">
+<meta property="og:image" content="https://talkdedsec.github.io/clipdeck/img/tema.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#14112a">
+<link rel="icon" href="favicon.ico">
+<style>
+  :root {
+    --bg: #0e0c1c;
+    --bg-2: #15122b;
+    --card: rgba(255, 255, 255, 0.045);
+    --card-line: rgba(255, 255, 255, 0.09);
+    --text: #eeeaff;
+    --dim: #a8a2c8;
+    --accent: #9b87ff;
+    --accent-2: #00b4a0;
+    --warm: #ff8a5c;
+    --radius: 16px;
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  img { max-width: 100%; height: auto; display: block; }
+  code, kbd {
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 0.9em;
+  }
+  kbd {
+    display: inline-block;
+    padding: 1px 8px;
+    border: 1px solid var(--card-line);
+    border-bottom-width: 2px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 16px; }
+
+  /* top bar */
+  header.bar {
+    position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(14px);
+    background: rgba(14, 12, 28, 0.72);
+    border-bottom: 1px solid var(--card-line);
+  }
+  header.bar .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); font-weight: 650; font-size: 18px; }
+  .brand img { width: 28px; height: 28px; }
+  .brand:hover { text-decoration: none; }
+  nav { margin-left: auto; display: flex; align-items: center; gap: 18px; }
+  nav a.link { color: var(--dim); font-size: 15px; }
+  nav a.link:hover { color: var(--text); text-decoration: none; }
+  .lang {
+    border: 1px solid var(--card-line); background: transparent; color: var(--text);
+    border-radius: 999px; padding: 4px 12px; font: inherit; font-size: 14px; cursor: pointer;
+  }
+  .lang:hover { border-color: var(--accent); }
+
+  /* hero */
+  .hero { position: relative; padding: 72px 0 56px; }
+  .glow { position: absolute; inset: -200px 0 0 0; pointer-events: none; z-index: -1; overflow: hidden; }
+  .glow span { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.55; }
+  .glow .a { width: 520px; height: 520px; left: -120px; top: 80px; background: #5b45d6; }
+  .glow .b { width: 460px; height: 460px; right: -80px; top: 160px; background: #007a6e; }
+  .glow .c { width: 380px; height: 380px; left: 40%; top: 420px; background: #a3405e; opacity: 0.35; }
+  .hero .wrap { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 4px 12px; border-radius: 999px; font-size: 13px;
+    background: rgba(155, 135, 255, 0.12); color: #cfc6ff; border: 1px solid rgba(155, 135, 255, 0.3);
+  }
+  h1 { font-size: clamp(36px, 5.4vw, 58px); line-height: 1.08; margin: 18px 0 18px; letter-spacing: -0.02em; }
+  h1 .grad { background: linear-gradient(90deg, #b9a9ff, #6ee7d6 60%, #ffb08a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { font-size: 19px; color: var(--dim); max-width: 34em; margin: 0 0 28px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 22px; border-radius: 12px; font-weight: 600; font-size: 16px;
+    border: 1px solid transparent; transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-1px); }
+  .btn.primary { background: linear-gradient(135deg, #8b74ff, #6a52f0); color: #fff; box-shadow: 0 10px 30px -10px rgba(123, 97, 255, 0.8); }
+  .btn.primary:hover { box-shadow: 0 14px 34px -10px rgba(123, 97, 255, 0.95); }
+  .btn.ghost { border-color: var(--card-line); color: var(--text); background: rgba(255, 255, 255, 0.03); }
+  .btn.ghost:hover { border-color: rgba(255, 255, 255, 0.25); }
+  .btn svg { width: 18px; height: 18px; }
+  .note { margin-top: 14px; font-size: 13.5px; color: var(--dim); }
+  .shots { position: relative; height: 560px; }
+  .shots img {
+    position: absolute; width: 300px; border-radius: 14px;
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .shots .front { right: 10px; top: 0; z-index: 2; }
+  .shots .back { left: 10px; top: 110px; transform: rotate(-4deg); opacity: 0.95; }
+
+  /* sections */
+  section { padding: 72px 0; }
+  section.alt { background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.02) 20%, rgba(255, 255, 255, 0.02) 80%, transparent); }
+  h2 { font-size: clamp(28px, 3.4vw, 38px); margin: 0 0 10px; letter-spacing: -0.01em; }
+  .sub { color: var(--dim); margin: 0 0 36px; max-width: 44em; font-size: 17px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .card {
+    background: var(--card); border: 1px solid var(--card-line); border-radius: var(--radius);
+    padding: 22px 22px 20px;
+  }
+  .card h3 { margin: 12px 0 6px; font-size: 18px; }
+  .card p { margin: 0; color: var(--dim); font-size: 15px; }
+  .icon {
+    width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center;
+    background: rgba(155, 135, 255, 0.14); color: #c7bbff;
+  }
+  .icon.t { background: rgba(0, 180, 160, 0.14); color: #7ee8d8; }
+  .icon.w { background: rgba(255, 138, 92, 0.14); color: #ffb79a; }
+  .icon svg { width: 22px; height: 22px; }
+
+  /* gallery */
+  .gallery { display: grid; grid-template-columns: 1.75fr 1fr; gap: 18px; align-items: start; }
+  .gallery .stack { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  figure { margin: 0; }
+  figure img { border-radius: 14px; box-shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.06); }
+  figcaption { color: var(--dim); font-size: 14px; margin-top: 10px; }
+
+  /* privacy */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  ul.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  ul.checks li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; color: var(--dim); }
+  ul.checks li b { color: var(--text); font-weight: 600; }
+  ul.checks svg { width: 22px; height: 22px; color: var(--accent-2); margin-top: 2px; }
+  .settings-shot { width: 100%; max-width: 440px; margin: 0 auto; }
+  /* Grid items may shrink below their content, so nothing pushes the page wider than the screen. */
+  .hero .wrap > *, .split > *, .gallery > *, .grid > * { min-width: 0; }
+
+  /* shortcuts */
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--card-line); vertical-align: top; }
+  td:first-child { width: 42%; }
+  tr:last-child td { border-bottom: 0; }
+  .table-card { padding: 6px 8px; }
+  .vars { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .vars code { padding: 3px 9px; border-radius: 8px; background: rgba(155, 135, 255, 0.12); color: #d5ccff; }
+
+  /* steps */
+  ol.steps { list-style: none; counter-reset: s; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  ol.steps li { counter-increment: s; position: relative; padding-top: 52px; }
+  ol.steps li::before {
+    content: counter(s); position: absolute; left: 22px; top: 20px;
+    width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+    background: linear-gradient(135deg, #8b74ff, #6a52f0); color: #fff; font-weight: 700; font-size: 15px;
+  }
+  .cmd { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: rgba(0, 0, 0, 0.35); border: 1px solid var(--card-line); overflow-x: auto; }
+  .cmd code { white-space: nowrap; color: #d9d3ff; }
+
+  footer { border-top: 1px solid var(--card-line); padding: 28px 0 40px; color: var(--dim); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+
+  @media (max-width: 920px) {
+    .hero .wrap, .split, .gallery { grid-template-columns: 1fr; }
+    .shots { height: 470px; max-width: 520px; margin: 0 auto; width: 100%; }
+    .shots img { width: 250px; }
+    .grid, ol.steps { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 600px) {
+    nav a.link { display: none; }
+    .hero { padding: 44px 0 32px; }
+    .shots { height: 400px; }
+    .shots img { width: 205px; }
+    .shots .front { right: 0; }
+    .shots .back { left: 0; top: 80px; }
+    .grid, ol.steps, .gallery .stack { grid-template-columns: 1fr; }
+    section { padding: 52px 0; }
+    td:first-child { width: auto; }
+    td { padding: 10px 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .btn { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="img/logo.png" alt="">clipdeck</a>
+    <nav>
+      <a class="link" href="#ozellikler" data-en="Features">Özellikler</a>
+      <a class="link" href="#gizlilik" data-en="Privacy">Gizlilik</a>
+      <a class="link" href="#kisayollar" data-en="Shortcuts">Kısayollar</a>
+      <a class="link" href="https://github.com/Talkdedsec/clipdeck">GitHub</a>
+      <button class="lang" id="lang" type="button" aria-label="Dil / Language">EN</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="glow"><span class="a"></span><span class="b"></span><span class="c"></span></div>
+    <div class="wrap">
+      <div>
+        <span class="pill" data-en="Free · Windows 10 &amp; 11 · no network access">Ücretsiz · Windows 10 ve 11 · internete bağlanmaz</span>
+        <h1><span data-en="The clipboard Windows" >Windows'un</span> <span class="grad" data-en="should have had">olması gereken</span> <span data-en="">panosu</span></h1>
+        <p class="lead" data-en="clipdeck replaces Win+V and Win+. with a fast, encrypted clipboard history and a colour emoji, kaomoji and symbol picker. Find anything you copied, clean it, transform it and paste it right where your cursor is.">clipdeck, Win+V ve Win+. yerine hızlı ve şifreli bir pano geçmişi ile renkli emoji, kaomoji ve sembol seçici getirir. Kopyaladığın her şeyi bul, temizle, dönüştür ve imlecin olduğu yere yapıştır.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://github.com/Talkdedsec/clipdeck/releases/latest/download/clipdeck-kurulum.exe">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+            <span data-en="Download for Windows">Windows için indir</span>
+          </a>
+          <a class="btn ghost" href="https://github.com/Talkdedsec/clipdeck">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+            <span data-en="Source code">Kaynak kodu</span>
+          </a>
+        </div>
+        <p class="note" data-en="Needs the .NET 10 Desktop Runtime. Installs per user, no admin rights.">.NET 10 Masaüstü Çalışma Zamanı gerekir. Kullanıcıya kurulur, yönetici izni istemez.</p>
+      </div>
+      <div class="shots">
+        <img class="back" src="img/emoji-tema.png" width="500" height="675" alt="Emoji seçici" data-en-alt="Emoji picker">
+        <img class="front" src="img/tema.png" width="500" height="675" alt="Pano geçmişi" data-en-alt="Clipboard history">
+      </div>
+    </div>
+  </div>
+
+  <section id="ozellikler">
+    <div class="wrap">
+      <h2 data-en="Everything you copy, one keystroke away">Kopyaladığın her şey bir tuş uzağında</h2>
+      <p class="sub" data-en="Text, images and files are kept encrypted and without duplicates. Start typing to search; even the words inside screenshots are found.">Metin, resim ve dosyalar şifreli ve tekrarsız saklanır. Yazmaya başla, ara; ekran görüntülerinin içindeki yazılar bile bulunur.</p>
+      <div class="grid">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+          <h3 data-en="Instant search">Anında arama</h3>
+          <p data-en="Ignores Turkish accents (sifre finds Şifre), reads text in images with OCR and filters by type or app.">Türkçe karakterlere takılmaz (sifre → Şifre), resimlerdeki yazıyı OCR ile okur, türe ya da uygulamaya göre süzer.</p>
+        </div>
+        <div class="card">
+          <div class="icon t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 14h5"/></svg></div>
+          <h3 data-en="Large preview">Büyük önizleme</h3>
+          <p data-en="Space shows long text, highlighted code, full images with their text, file sizes and colour values beside the panel.">Space ile uzun metin, renklendirilmiş kod, resim ve içindeki yazı, dosya boyutları ve renk değerleri panelin yanında açılır.</p>
+        </div>
+        <div class="card">
+          <div class="icon w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10"/><path d="M4 12h16"/><path d="M4 17h7"/><path d="m16 15 2 2 4-4"/></svg></div>
+          <h3 data-en="Paste your way">İstediğin gibi yapıştır</h3>
+          <p data-en="Plain text, UPPER/lower case, one line, sorted lines, pretty JSON, URL and Base64; or several items joined at once.">Düz metin, BÜYÜK/küçük harf, tek satır, sıralı satırlar, güzel JSON, URL ve Base64; ya da birden çok öğeyi birleştirerek.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M8 14h3"/><path d="M8 17h6"/></svg></div>
+          <h3 data-en="Snippets with variables">Değişkenli snippet'ler</h3>
+          <p data-en="Signatures and templates that fill in the date, time or clipboard, and place the cursor where you want it.">Tarihi, saati ya da panodakini kendisi dolduran, imleci istediğin yere koyan imza ve şablonlar.</p>
+        </div>
+        <div class="card">
+          <div class="icon t"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><path d="M9 9.5h.01"/><path d="M15 9.5h.01"/></svg></div>
+          <h3 data-en="Emoji, kaomoji, symbols">Emoji, kaomoji, sembol</h3>
+          <p data-en="Colour emoji with Turkish and English search, skin tones and recents; kaomoji; symbols searchable by Unicode name.">Türkçe ve İngilizce aranan renkli emoji, ten rengi ve son kullanılanlar; kaomoji; Unicode adıyla aranan semboller.</p>
+        </div>
+        <div class="card">
+          <div class="icon w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2a10 10 0 0 0 0 20c1.1 0 2-.9 2-2 0-.5-.2-1-.5-1.3-.3-.4-.5-.8-.5-1.3 0-1.1.9-2 2-2h2.4A5.6 5.6 0 0 0 22 9.8C22 5.5 17.5 2 12 2Z"/></svg></div>
+          <h3 data-en="Make it yours">Sana göre</h3>
+          <p data-en="Dark or light, any accent colour, a blurred background photo, card opacity and panel size. Turkish and English UI.">Koyu ya da açık, istediğin vurgu rengi, bulanık arka plan fotoğrafı, kart saydamlığı ve panel boyutu. Türkçe ve İngilizce arayüz.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2 data-en="See it">Yakından bak</h2>
+      <p class="sub" data-en="The panel opens next to your cursor in about 80 ms, even with ten thousand items in the history.">Panel, geçmişte on bin öğe olsa bile 80 ms civarında imlecinin yanında açılır.</p>
+      <div class="gallery">
+        <figure>
+          <img src="img/onizleme.png" width="1085" height="675" loading="lazy" alt="Önizleme penceresi" data-en-alt="Preview window">
+          <figcaption data-en="Preview: a screenshot with the text recognised in it.">Önizleme: ekran görüntüsü ve içinden okunan yazı.</figcaption>
+        </figure>
+        <div class="stack">
+          <figure>
+            <img src="img/gecmis-2.png" width="500" height="675" loading="lazy" alt="Geçmiş" data-en-alt="History">
+            <figcaption data-en="Colour codes, files, a masked card number.">Renk kodu, dosyalar, maskelenmiş kart.</figcaption>
+          </figure>
+          <figure>
+            <img src="img/semboller.png" width="500" height="675" loading="lazy" alt="Semboller" data-en-alt="Symbols">
+            <figcaption data-en="Symbols by category and Unicode name.">Kategori ve Unicode adına göre semboller.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gizlilik">
+    <div class="wrap split">
+      <div>
+        <h2 data-en="Private by default">Varsayılan olarak gizli</h2>
+        <p class="sub" data-en="Your clipboard holds passwords, addresses and messages. clipdeck treats it that way.">Panonda parolalar, adresler, mesajlar olur. clipdeck ona göre davranır.</p>
+        <ul class="checks">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Encrypted history.&lt;/b&gt; Every field is sealed with AES-256-GCM; the key opens only for your Windows account (DPAPI).">
+            <b>Şifreli geçmiş.</b> Her alan AES-256-GCM ile şifrelenir; anahtar yalnızca senin Windows hesabınla açılır (DPAPI).</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Sensitive data.&lt;/b&gt; Card numbers, IBANs, API keys and tokens are masked in the list, or not saved at all.">
+            <b>Hassas veri.</b> Kart numarası, IBAN, API anahtarı ve token'lar listede maskelenir ya da hiç kaydedilmez.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Password managers respected.&lt;/b&gt; Copies marked private are skipped, and you choose apps that are never recorded.">
+            <b>Parola yöneticilerine saygı.</b> Gizli işaretli kopyalar atlanır; hiç kaydedilmeyecek uygulamaları sen seçersin.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Clean links.&lt;/b&gt; utm_, fbclid, gclid and share trackers are stripped automatically or from the menu.">
+            <b>Temiz linkler.</b> utm_, fbclid, gclid ve paylaşım izleyicileri otomatik ya da menüden silinir.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Your data stays here.&lt;/b&gt; No network access. Backups are encrypted with a password you choose.">
+            <b>Veri sende kalır.</b> İnternete bağlanmaz. Yedekler senin seçtiğin parolayla şifrelenir.</span></li>
+        </ul>
+      </div>
+      <figure>
+        <img class="settings-shot" src="img/gizlilik.png" width="750" height="1025" loading="lazy" alt="Gizlilik ayarları" data-en-alt="Privacy settings">
+      </figure>
+    </div>
+  </section>
+
+  <section id="kisayollar" class="alt">
+    <div class="wrap">
+      <h2 data-en="Keyboard first">Klavyeden ayrılmadan</h2>
+      <p class="sub" data-en="Everything works without the mouse.">Her şey faresiz çalışır.</p>
+      <div class="card table-card">
+        <table>
+          <tr><td><kbd>Win</kbd> + <kbd>V</kbd></td><td data-en="Open the clipboard history">Pano geçmişini aç</td></tr>
+          <tr><td><kbd>Win</kbd> + <kbd>.</kbd></td><td data-en="Emoji, kaomoji and symbols">Emoji, kaomoji ve semboller</td></tr>
+          <tr><td><kbd>Enter</kbd> · <kbd>Shift</kbd> + <kbd>Enter</kbd></td><td data-en="Paste · paste as plain text">Yapıştır · düz metin olarak yapıştır</td></tr>
+          <tr><td><kbd>Space</kbd> · <kbd>F3</kbd></td><td data-en="Preview">Önizleme</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>Space</kbd></td><td data-en="Select several, paste them joined">Birden çok seç, birleştirip yapıştır</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>1</kbd>…<kbd>9</kbd></td><td data-en="Quick paste by position">Sıradaki öğeyi hızlı yapıştır</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>P</kbd> · <kbd>S</kbd> · <kbd>O</kbd></td><td data-en="Pin · save as snippet · text from image">Sabitle · snippet yap · resimden metin</td></tr>
+          <tr><td><kbd>Tab</kbd></td><td data-en="Next section">Sonraki bölüm</td></tr>
+          <tr><td><kbd>Shift</kbd> + <kbd>F10</kbd></td><td data-en="Item menu: transform, clean link, pin, delete">Öğe menüsü: dönüştür, link temizle, sabitle, sil</td></tr>
+        </table>
+      </div>
+      <div class="vars">
+        <code>{tarih}</code><code>{saat}</code><code>{gün}</code><code>{pano}</code><code>{guid}</code><code>{imleç}</code>
+        <code>{date}</code><code>{time}</code><code>{day}</code><code>{clipboard}</code><code>{cursor}</code>
+      </div>
+    </div>
+  </section>
+
+  <section id="kurulum">
+    <div class="wrap">
+      <h2 data-en="Install in a minute">Bir dakikada kur</h2>
+      <p class="sub" data-en="No admin rights. Updates keep your history and settings.">Yönetici izni gerekmez. Güncellemeler geçmişini ve ayarlarını korur.</p>
+      <ol class="steps">
+        <li class="card">
+          <h3 data-en="Get .NET 10">.NET 10'u al</h3>
+          <p data-en="Install the .NET 10 Desktop Runtime if you don't have it yet.">Yüklü değilse .NET 10 Masaüstü Çalışma Zamanı'nı kur.</p>
+          <p style="margin-top: 10px;"><a href="https://dotnet.microsoft.com/download/dotnet/10.0" data-en="Microsoft download page →">Microsoft indirme sayfası →</a></p>
+        </li>
+        <li class="card">
+          <h3 data-en="Run the setup">Kurulumu çalıştır</h3>
+          <p data-en="Download clipdeck-kurulum.exe and press Install. If SmartScreen warns, choose More info → Run anyway.">clipdeck-kurulum.exe'yi indir, Kur'a bas. SmartScreen uyarırsa Ek bilgi → Yine de çalıştır.</p>
+        </li>
+        <li class="card">
+          <h3 data-en="Press Win+V">Win+V'ye bas</h3>
+          <p data-en="clipdeck lives in the tray. Settings → Language switches it to English.">clipdeck tepside çalışır. Ayarlar → Dil ile İngilizceye geçebilirsin.</p>
+          <div class="cmd"><code>clipdeck-kurulum.exe --sessiz</code></div>
+          <p style="margin-top: 8px; font-size: 13.5px;" data-en="Updates silently, keeping your choices.">Seçimlerini koruyarak sessizce günceller.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>clipdeck · <a href="https://github.com/Talkdedsec">Talkdedsec</a></span>
+    <span>
+      <a href="https://github.com/Talkdedsec/clipdeck/releases" data-en="Releases">Sürümler</a> ·
+      <a href="https://github.com/Talkdedsec/clipdeck/issues" data-en="Report a problem">Sorun bildir</a> ·
+      <a href="https://github.com/Talkdedsec/clipdeck/blob/main/CHANGELOG.md" data-en="Changelog">Değişiklikler</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var key = "clipdeck-lang";
+    var nodes = document.querySelectorAll("[data-en]");
+    var alts = document.querySelectorAll("[data-en-alt]");
+    var button = document.getElementById("lang");
+    nodes.forEach(function (n) { n.dataset.tr = n.innerHTML; });
+    alts.forEach(function (n) { n.dataset.trAlt = n.alt; });
+
+    function apply(lang) {
+      var en = lang === "en";
+      nodes.forEach(function (n) { n.innerHTML = en ? n.dataset.en : n.dataset.tr; });
+      alts.forEach(function (n) { n.alt = en ? n.dataset.enAlt : n.dataset.trAlt; });
+      document.documentElement.lang = en ? "en" : "tr";
+      document.title = en ? "clipdeck — clipboard history and emoji picker for Windows" : "clipdeck — Windows için pano geçmişi ve emoji seçici";
+      button.textContent = en ? "TR" : "EN";
+      try { localStorage.setItem(key, lang); } catch (e) {}
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem(key); } catch (e) {}
+    var initial = saved || ((navigator.language || "tr").toLowerCase().indexOf("tr") === 0 ? "tr" : "en");
+    apply(initial);
+    button.addEventListener("click", function () {
+      apply(document.documentElement.lang === "en" ? "tr" : "en");
+    });
+  })();
+</script>
+</body>
+</html>

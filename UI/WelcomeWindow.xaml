@@ -1,0 +1,34 @@
+<Window x:Class="ClipDeck.UI.WelcomeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:ClipDeck.UI"
+        Title="clipdeck" Width="480" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" Topmost="True" Icon="/Assets/clipdeck.ico"
+        Background="{DynamicResource Bg}" Foreground="{DynamicResource Text}"
+        FontFamily="{StaticResource UiFont}" FontSize="13" UseLayoutRounding="True">
+    <StackPanel Margin="26,22,26,20">
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/Assets/clipdeck.png" Width="44" Height="44" RenderOptions.BitmapScalingMode="HighQuality"/>
+            <StackPanel Margin="14,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="{ui:T 'clipdeck\'e hoş geldin'}" FontSize="20" FontWeight="SemiBold"/>
+                <TextBlock Text="{ui:T 'Kopyaladığın her şey artık tek bir yerde.'}" Foreground="{DynamicResource TextDim}" Margin="0,2,0,0"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Border Background="{DynamicResource Surface}" CornerRadius="8" Padding="16,12" Margin="0,18,0,0">
+            <StackPanel>
+                <TextBlock Foreground="{DynamicResource TextDim}" LineHeight="21" TextWrapping="Wrap"
+                           Text="{ui:T 'Win+V pano geçmişini, Win+. emojileri açar. Yazarak ara, Enter ile yapıştır.'}"/>
+                <CheckBox x:Name="OptWinV" Margin="0,12,0,6" Content="{ui:T 'Win+V\'yi devral (Windows pano paneli yerine clipdeck açılır)'}"/>
+                <CheckBox x:Name="OptWinPeriod" Content="{ui:T 'Win+. ile emoji panelini aç'}"/>
+                <CheckBox x:Name="OptAutostart" Content="{ui:T 'Windows açılınca başlat'}"/>
+            </StackPanel>
+        </Border>
+
+        <DockPanel Margin="0,16,0,0" LastChildFill="False">
+            <TextBlock Foreground="{DynamicResource TextDim}" VerticalAlignment="Center" FontSize="12"
+                       Text="{ui:T 'Bunları sonra Ayarlar\'dan değiştirebilirsin.'}"/>
+            <Button DockPanel.Dock="Right" Style="{StaticResource PrimaryButton}" Content="{ui:T Başla}" IsDefault="True" Click="Start_Click"/>
+        </DockPanel>
+    </StackPanel>
+</Window>

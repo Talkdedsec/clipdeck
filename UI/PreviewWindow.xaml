@@ -1,0 +1,45 @@
+<Window x:Class="ClipDeck.UI.PreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="clr-namespace:ClipDeck.UI"
+        Title="clipdeck önizleme" Width="460" Height="540"
+        WindowStyle="None" ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True" ShowActivated="False"
+        Background="{DynamicResource Bg}" Foreground="{DynamicResource Text}"
+        FontFamily="{StaticResource UiFont}" FontSize="13" UseLayoutRounding="True">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" GlassFrameThickness="1" CornerRadius="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+    <Grid Margin="14,12,14,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <DockPanel Margin="0,0,0,10">
+            <TextBlock x:Name="Glyph" FontFamily="{StaticResource IconFont}" FontSize="14" Foreground="{DynamicResource Accent}"
+                       VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <TextBlock DockPanel.Dock="Right" Text="{ui:T 'Space / F3 kapatır'}" FontSize="11" Foreground="{DynamicResource TextDim}" VerticalAlignment="Center"/>
+            <TextBlock x:Name="Heading" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+        </DockPanel>
+
+        <Border Grid.Row="1" Background="{DynamicResource Card}" CornerRadius="7">
+            <ScrollViewer x:Name="Scroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="12,10">
+                <StackPanel>
+                    <TextBlock x:Name="Note" Foreground="{DynamicResource TextDim}" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,8" Visibility="Collapsed"/>
+                    <TextBlock x:Name="TextView" TextWrapping="Wrap" LineHeight="20" Visibility="Collapsed"/>
+                    <TextBlock x:Name="CodeView" FontFamily="{StaticResource MonoFont}" FontSize="12.5" LineHeight="18" TextWrapping="Wrap" Visibility="Collapsed"/>
+                    <StackPanel x:Name="ColorView" Visibility="Collapsed">
+                        <Border x:Name="ColorSwatch" Height="90" CornerRadius="6" BorderBrush="{DynamicResource Line}" BorderThickness="1" Margin="0,0,0,12"/>
+                        <TextBlock x:Name="ColorText" FontFamily="{StaticResource MonoFont}" LineHeight="22"/>
+                    </StackPanel>
+                    <Image x:Name="ImageView" Stretch="Uniform" HorizontalAlignment="Left" Visibility="Collapsed"
+                           RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock x:Name="ExtraView" TextWrapping="Wrap" LineHeight="20" Margin="0,10,0,0" Visibility="Collapsed"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <TextBlock x:Name="Footer" Grid.Row="2" Margin="2,8,0,0" FontSize="11" Foreground="{DynamicResource TextDim}" TextTrimming="CharacterEllipsis"/>
+    </Grid>
+</Window>

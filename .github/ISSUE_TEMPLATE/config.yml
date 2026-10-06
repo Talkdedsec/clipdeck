@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Güvenlik açığı / Security vulnerability
+    url: https://github.com/Talkdedsec/clipdeck/security/advisories/new
+    about: Açıkları gizli olarak bildir. / Report vulnerabilities privately.

@@ -1,0 +1,35 @@
+name: Derleme
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Derle
+        run: dotnet build clipdeck.csproj -c Release
+
+      - name: Test
+        run: dotnet test tests/clipdeck.Tests/clipdeck.Tests.csproj -c Release --logger "console;verbosity=normal"
+
+      - name: Paketle
+        run: ./build.ps1
+        shell: pwsh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clipdeck
+          path: |
+            dist/clipdeck.exe
+            dist/clipdeck-kurulum.exe
+          retention-days: 14

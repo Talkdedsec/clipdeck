@@ -1,0 +1,37 @@
+name: Hata bildirimi / Bug report
+description: Bir şey beklendiği gibi çalışmıyor. / Something does not work as expected.
+labels: [hata]
+body:
+  - type: textarea
+    id: ne
+    attributes:
+      label: Ne oldu? / What happened?
+      description: Ne yaptın, ne bekliyordun, ne oldu? / What did you do, what did you expect, what happened?
+    validations:
+      required: true
+  - type: textarea
+    id: adimlar
+    attributes:
+      label: Tekrarlama adımları / Steps to reproduce
+      placeholder: |
+        1. Win+V
+        2. ...
+  - type: input
+    id: surum
+    attributes:
+      label: clipdeck sürümü / version
+      description: Ayarlar penceresinin altında yazar. / Shown at the bottom of the Settings window.
+      placeholder: "0.3.0"
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows sürümü / version
+      placeholder: "Windows 11 24H2"
+  - type: textarea
+    id: gunluk
+    attributes:
+      label: Günlük / Log
+      description: "%LOCALAPPDATA%\\clipdeck\\clipdeck.log dosyasındaki ilgili satırlar (pano içeriği yazılmaz). / Relevant lines from the log (clipboard contents are never logged)."
+      render: text
