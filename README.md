@@ -12,10 +12,11 @@ Win+V ve Win+. yerine geçer; kopyaladığın her şeyi bulur, temizler, dönü�
 [![Sürüm](https://img.shields.io/github/v/release/Talkdedsec/clipdeck?label=s%C3%BCr%C3%BCm)](https://github.com/Talkdedsec/clipdeck/releases/latest)
 ![Platform](https://img.shields.io/badge/Windows-10%20%7C%2011-0078D4)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4)
+[![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-2ea44f)](LICENSE)
 
 [**İndir**](https://github.com/Talkdedsec/clipdeck/releases/latest) · [**Web sitesi**](https://talkdedsec.github.io/clipdeck/) · [English](#english)
 
-<img src="docs/img/tema.png" width="320" alt="Arka plan fotoğraflı pano geçmişi">&nbsp;&nbsp;<img src="docs/img/emoji-tema.png" width="320" alt="Renkli emoji seçici">
+<img src="docs/img/demo.gif" width="760" alt="clipdeck: resmi içindeki yazıyla bulma, önizleme, yapıştırma ve emoji ekleme">
 
 </div>
 
@@ -64,7 +65,7 @@ Win+V ve Win+. yerine geçer; kopyaladığın her şeyi bulur, temizler, dönü�
 - Linklerdeki izleme parametrelerini (`utm_`, `fbclid`, `gclid`, `si`…) siler: otomatik, menüden ya da kapalı.
 - Kaydı tek tıkla duraklatma, eski öğeleri gün ya da adet sınırıyla otomatik silme.
 - Parolalı, şifreli yedek: başka bir bilgisayara taşıyıp geri yükleyebilirsin.
-- İnternete hiçbir şey göndermez.
+- Varsayılan olarak internete bağlanmaz. İsteğe bağlı güncelleme denetimi açılırsa günde bir kez GitHub'dan yalnızca son sürümün numarasını okur ve yeni sürüm varsa tepsiden haber verir.
 
 **Görünüm ve kullanım**
 - Sistem, koyu ya da açık tema; özel vurgu rengi; bulanıklaştırılıp karartılabilen arka plan fotoğrafı.
@@ -74,9 +75,13 @@ Win+V ve Win+. yerine geçer; kopyaladığın her şeyi bulur, temizler, dönü�
 
 ## Ekran görüntüleri
 
-| Önizleme | Geçmiş |
-| --- | --- |
-| <img src="docs/img/onizleme.png" width="520" alt="Resim önizlemesi ve OCR metni"> | <img src="docs/img/gecmis-2.png" width="240" alt="Renk kodu, dosya ve maskelenmiş kart"> |
+| Pano geçmişi | Emoji | Geçmiş |
+| --- | --- | --- |
+| <img src="docs/img/tema.png" width="240" alt="Arka plan fotoğraflı pano geçmişi"> | <img src="docs/img/emoji-tema.png" width="240" alt="Renkli emoji seçici"> | <img src="docs/img/gecmis-2.png" width="240" alt="Renk kodu, dosya ve maskelenmiş kart"> |
+
+| Önizleme |
+| --- |
+| <img src="docs/img/onizleme.png" width="620" alt="Resim önizlemesi ve OCR metni"> |
 
 | Snippet'ler | Semboller | Ayarlar |
 | --- | --- | --- |
@@ -158,6 +163,10 @@ docs\           web sitesi (GitHub Pages)
 - Emoji adları: [Unicode CLDR](https://cldr.unicode.org/) (Unicode License)
 - Metin tanıma: Windows'un yerleşik OCR motoru
 
+## Lisans
+
+[MIT](LICENSE) © 2026 Talkdedsec
+
 [Değişiklikler](CHANGELOG.md) · [Katkı rehberi](CONTRIBUTING.md) · [Güvenlik](SECURITY.md)
 
 ---
@@ -166,14 +175,22 @@ docs\           web sitesi (GitHub Pages)
 
 **clipdeck** is a fast, encrypted clipboard history and emoji / kaomoji / symbol picker for Windows that replaces Win+V and Win+. .
 
+<img src="docs/img/en/demo.gif" width="760" alt="clipdeck: finding a screenshot by its text, previewing it, pasting and adding an emoji">
+
 Compared with the built-in Win+V (25 items, cleared on restart except pinned ones, no files, 4 MB per item), clipdeck keeps an unlimited history across restarts, handles files and items up to 64 MB, and adds OCR search, a large preview, snippets, transforms, sensitive-data masking and encrypted backups. It does not sync between devices: your data stays on your PC.
 
 - **Clipboard history:** text, images and files, unlimited and deduplicated; instant search (including text inside images via OCR); type and app filters; code highlighting and colour swatches; large preview (Space / F3); multi-select paste; pinning; Ctrl+1…9 quick paste; paste as plain text or transformed (case, whitespace, sort lines, JSON, URL, Base64).
 - **Snippets** with variables: `{date}` `{time}` `{datetime}` `{day}` `{month}` `{year}` `{clipboard}` `{guid}` `{cursor}`.
 - **Emoji picker:** colour emoji, Turkish and English search, skin tones, recents, kaomoji and symbols searchable by Unicode name.
-- **Privacy:** AES-256-GCM encryption with a DPAPI-protected key; honours password-manager privacy flags; excluded apps; masks or skips card numbers, IBANs and tokens; strips tracking parameters from links (automatic, on demand or off); pause recording; auto-delete by age or count; password-protected encrypted backups; no network access.
+- **Privacy:** AES-256-GCM encryption with a DPAPI-protected key; honours password-manager privacy flags; excluded apps; masks or skips card numbers, IBANs and tokens; strips tracking parameters from links (automatic, on demand or off); pause recording; auto-delete by age or count; password-protected encrypted backups; no network access unless you turn on the optional daily update check, which only reads the latest version number from GitHub.
 - **Look:** system / dark / light theme, custom accent colour, blurred background photo, card opacity, panel size, Turkish and English UI, admin mode for pasting into elevated apps.
+
+| History | Preview | Settings |
+| --- | --- | --- |
+| <img src="docs/img/en/gecmis-2.png" width="240" alt="History with a colour code, files and a masked card"> | <img src="docs/img/en/onizleme.png" width="380" alt="Image preview with recognised text"> | <img src="docs/img/en/ayarlar.png" width="240" alt="Appearance settings"> |
 
 **Install:** install the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0), download `clipdeck-kurulum.exe` from the [latest release](https://github.com/Talkdedsec/clipdeck/releases/latest) and run it (no admin rights needed). Switch the interface to English under Settings → Language. Silent update: `clipdeck-kurulum.exe --sessiz`.
 
 **Build:** `dotnet build`, `dotnet test tests\clipdeck.Tests\clipdeck.Tests.csproj`, `.\build.ps1`.
+
+**License:** [MIT](LICENSE).

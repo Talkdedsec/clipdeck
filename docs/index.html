@@ -145,6 +145,12 @@
   ul.checks li b { color: var(--text); font-weight: 600; }
   ul.checks svg { width: 22px; height: 22px; color: var(--accent-2); margin-top: 2px; }
   .settings-shot { width: 100%; max-width: 440px; margin: 0 auto; }
+  section.demo { padding-top: 24px; }
+  .video-frame {
+    border-radius: 16px; overflow: hidden; background: #1e1e22;
+    box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .video-frame video { display: block; width: 100%; height: auto; }
   /* Grid items may shrink below their content, so nothing pushes the page wider than the screen. */
   .hero .wrap > *, .split > *, .gallery > *, .grid > * { min-width: 0; }
 
@@ -220,7 +226,7 @@
     <div class="glow"><span class="a"></span><span class="b"></span><span class="c"></span></div>
     <div class="wrap">
       <div>
-        <span class="pill" data-en="Free · Windows 10 &amp; 11 · no network access">Ücretsiz · Windows 10 ve 11 · internete bağlanmaz</span>
+        <span class="pill" data-en="Free &amp; open source · Windows 10 &amp; 11 · offline by default">Ücretsiz ve açık kaynak · Windows 10 ve 11 · varsayılan olarak çevrimdışı</span>
         <h1><span data-en="The clipboard Windows" >Windows'un</span> <span class="grad" data-en="should have had">olması gereken</span> <span data-en="">panosu</span></h1>
         <p class="lead" data-en="clipdeck replaces Win+V and Win+. with a fast, encrypted clipboard history and a colour emoji, kaomoji and symbol picker. Find anything you copied, clean it, transform it and paste it right where your cursor is.">clipdeck, Win+V ve Win+. yerine hızlı ve şifreli bir pano geçmişi ile renkli emoji, kaomoji ve sembol seçici getirir. Kopyaladığın her şeyi bul, temizle, dönüştür ve imlecin olduğu yere yapıştır.</p>
         <div class="cta">
@@ -236,11 +242,22 @@
         <p class="note" data-en="Needs the .NET 10 Desktop Runtime. Installs per user, no admin rights.">.NET 10 Masaüstü Çalışma Zamanı gerekir. Kullanıcıya kurulur, yönetici izni istemez.</p>
       </div>
       <div class="shots">
-        <img class="back" src="img/emoji-tema.png" width="500" height="675" alt="Emoji seçici" data-en-alt="Emoji picker">
-        <img class="front" src="img/tema.png" width="500" height="675" alt="Pano geçmişi" data-en-alt="Clipboard history">
+        <img class="back" src="img/emoji-tema.png" data-en-src="img/en/emoji-tema.png" width="500" height="675" alt="Emoji seçici" data-en-alt="Emoji picker">
+        <img class="front" src="img/tema.png" data-en-src="img/en/tema.png" width="500" height="675" alt="Pano geçmişi" data-en-alt="Clipboard history">
       </div>
     </div>
   </div>
+
+  <section id="demo" class="demo">
+    <div class="wrap">
+      <h2 data-en="See it in action">İş başında</h2>
+      <p class="sub" data-en="Find a screenshot by the text inside it, preview it, paste a note and add an emoji, all without leaving the keyboard.">Bir ekran görüntüsünü içindeki yazıyla bul, önizle, bir notu yapıştır ve emoji ekle; klavyeden hiç ayrılmadan.</p>
+      <div class="video-frame">
+        <video id="demo-video" src="img/demo.mp4" data-en-src="img/en/demo.mp4" poster="img/demo-poster.jpg" data-en-poster="img/en/demo-poster.jpg"
+               width="1204" height="792" autoplay muted loop playsinline preload="metadata" aria-label="clipdeck tanıtım videosu"></video>
+      </div>
+    </div>
+  </section>
 
   <section id="ozellikler">
     <div class="wrap">
@@ -312,16 +329,16 @@
       <p class="sub" data-en="The panel opens next to your cursor in about 80 ms, even with ten thousand items in the history.">Panel, geçmişte on bin öğe olsa bile 80 ms civarında imlecinin yanında açılır.</p>
       <div class="gallery">
         <figure>
-          <img src="img/onizleme.png" width="1085" height="675" loading="lazy" alt="Önizleme penceresi" data-en-alt="Preview window">
+          <img src="img/onizleme.png" data-en-src="img/en/onizleme.png" width="1085" height="675" loading="lazy" alt="Önizleme penceresi" data-en-alt="Preview window">
           <figcaption data-en="Preview: a screenshot with the text recognised in it.">Önizleme: ekran görüntüsü ve içinden okunan yazı.</figcaption>
         </figure>
         <div class="stack">
           <figure>
-            <img src="img/gecmis-2.png" width="500" height="675" loading="lazy" alt="Geçmiş" data-en-alt="History">
+            <img src="img/gecmis-2.png" data-en-src="img/en/gecmis-2.png" width="500" height="675" loading="lazy" alt="Geçmiş" data-en-alt="History">
             <figcaption data-en="Colour codes, files, a masked card number.">Renk kodu, dosyalar, maskelenmiş kart.</figcaption>
           </figure>
           <figure>
-            <img src="img/semboller.png" width="500" height="675" loading="lazy" alt="Semboller" data-en-alt="Symbols">
+            <img src="img/semboller.png" data-en-src="img/en/semboller.png" width="500" height="675" loading="lazy" alt="Semboller" data-en-alt="Symbols">
             <figcaption data-en="Symbols by category and Unicode name.">Kategori ve Unicode adına göre semboller.</figcaption>
           </figure>
         </div>
@@ -343,12 +360,12 @@
             <b>Parola yöneticilerine saygı.</b> Gizli işaretli kopyalar atlanır; hiç kaydedilmeyecek uygulamaları sen seçersin.</span></li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Clean links.&lt;/b&gt; utm_, fbclid, gclid and share trackers are stripped automatically or from the menu.">
             <b>Temiz linkler.</b> utm_, fbclid, gclid ve paylaşım izleyicileri otomatik ya da menüden silinir.</span></li>
-          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Your data stays here.&lt;/b&gt; No network access. Backups are encrypted with a password you choose.">
-            <b>Veri sende kalır.</b> İnternete bağlanmaz. Yedekler senin seçtiğin parolayla şifrelenir.</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg><span data-en="&lt;b&gt;Your data stays here.&lt;/b&gt; No network access by default; the optional update check only reads the latest version number. Backups are encrypted with a password you choose.">
+            <b>Veri sende kalır.</b> Varsayılan olarak internete bağlanmaz; isteğe bağlı güncelleme denetimi yalnızca son sürüm numarasını okur. Yedekler senin seçtiğin parolayla şifrelenir.</span></li>
         </ul>
       </div>
       <figure>
-        <img class="settings-shot" src="img/gizlilik.png" width="750" height="1025" loading="lazy" alt="Gizlilik ayarları" data-en-alt="Privacy settings">
+        <img class="settings-shot" src="img/gizlilik.png" data-en-src="img/en/gizlilik.png" width="750" height="1025" loading="lazy" alt="Gizlilik ayarları" data-en-alt="Privacy settings">
       </figure>
     </div>
   </section>
@@ -404,7 +421,7 @@
 
 <footer>
   <div class="wrap">
-    <span>clipdeck · <a href="https://github.com/Talkdedsec">Talkdedsec</a></span>
+    <span>clipdeck · <a href="https://github.com/Talkdedsec">Talkdedsec</a> · <a href="https://github.com/Talkdedsec/clipdeck/blob/main/LICENSE" data-en="MIT license">MIT lisansı</a></span>
     <span>
       <a href="https://github.com/Talkdedsec/clipdeck/releases" data-en="Releases">Sürümler</a> ·
       <a href="https://github.com/Talkdedsec/clipdeck/issues" data-en="Report a problem">Sorun bildir</a> ·
@@ -418,14 +435,36 @@
     var key = "clipdeck-lang";
     var nodes = document.querySelectorAll("[data-en]");
     var alts = document.querySelectorAll("[data-en-alt]");
+    var srcs = document.querySelectorAll("[data-en-src]");
+    var video = document.getElementById("demo-video");
     var button = document.getElementById("lang");
     nodes.forEach(function (n) { n.dataset.tr = n.innerHTML; });
     alts.forEach(function (n) { n.dataset.trAlt = n.alt; });
+    srcs.forEach(function (n) { n.dataset.trSrc = n.getAttribute("src"); });
+    video.dataset.trPoster = video.getAttribute("poster");
+
+    // Respect "reduce motion": show the poster and let the visitor start the video.
+    var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (still) {
+      video.removeAttribute("autoplay");
+      video.controls = true;
+    }
 
     function apply(lang) {
       var en = lang === "en";
       nodes.forEach(function (n) { n.innerHTML = en ? n.dataset.en : n.dataset.tr; });
       alts.forEach(function (n) { n.alt = en ? n.dataset.enAlt : n.dataset.trAlt; });
+      srcs.forEach(function (n) {
+        var src = en ? n.dataset.enSrc : n.dataset.trSrc;
+        if (n.getAttribute("src") === src) return;
+        n.setAttribute("src", src);
+        if (n === video) {
+          video.setAttribute("poster", en ? video.dataset.enPoster : video.dataset.trPoster);
+          video.load();
+          if (!still) video.play().catch(function () {});
+        }
+      });
+      video.setAttribute("aria-label", en ? "clipdeck demo video" : "clipdeck tanıtım videosu");
       document.documentElement.lang = en ? "en" : "tr";
       document.title = en ? "clipdeck — clipboard history and emoji picker for Windows" : "clipdeck — Windows için pano geçmişi ve emoji seçici";
       button.textContent = en ? "TR" : "EN";

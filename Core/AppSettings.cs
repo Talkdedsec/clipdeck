@@ -12,6 +12,9 @@ public sealed class AppSettings
     public string LinkCleaning { get; set; } = "menu";
     public string Language { get; set; } = "tr";
     public bool RunAsAdmin { get; set; }
+    public bool CheckUpdates { get; set; }
+    public long LastUpdateCheck { get; set; }
+    public string? NotifiedVersion { get; set; }
     public bool WelcomeShown { get; set; }
     public bool StartWithWindows { get; set; }
     public bool MoveUsedToTop { get; set; } = true;

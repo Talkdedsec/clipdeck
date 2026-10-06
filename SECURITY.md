@@ -17,6 +17,6 @@ Bildirime en kısa sürede dönülür; düzeltme yayınlanınca bildiren kişi i
 - Geçmişteki her içerik alanı AES-256-GCM ile şifrelenir. Ana anahtar diskte Windows DPAPI ile (yalnızca o Windows hesabı) korunur.
 - Aynı içeriği tekrar kaydetmemek için anahtarlı özet (HMAC-SHA256) kullanılır; içeriğin kendisi tahmin edilebilir bir özet olarak saklanmaz.
 - Yedekler kullanıcının parolasından PBKDF2-SHA256 (600.000 tur) ile türetilen anahtarla, 1 MiB'lık AES-GCM parçaları halinde şifrelenir; kesilmiş ya da değiştirilmiş dosyalar reddedilir.
-- Program ağ erişimi yapmaz.
+- Program varsayılan olarak ağ erişimi yapmaz. İsteğe bağlı güncelleme denetimi açılırsa günde en fazla bir kez `api.github.com` üzerinden yalnızca bu deponun son sürüm bilgisini okur; pano içeriği ya da kişisel veri gönderilmez ve yalnızca bu deponun sayfaları açılır.
 
 Kapsam dışı: aynı Windows hesabında çalışan kötü amaçlı yazılımlar (bu hesabın DPAPI anahtarına ve panosuna zaten erişebilir) ve bilgisayara fiziksel erişimi olan saldırganlar.

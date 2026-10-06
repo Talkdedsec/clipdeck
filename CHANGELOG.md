@@ -1,5 +1,14 @@
 # Değişiklikler
 
+## 0.4.0 — 2026-10-06
+
+**Yeni**
+- İsteğe bağlı güncelleme bildirimi (Ayarlar → Genel, varsayılan kapalı): günde bir kez GitHub'dan yalnızca son sürümün numarasını okur; yeni sürüm varsa tepside bir kez haber verir ve tepsi menüsüne indirme bağlantısı ekler. "Şimdi denetle" düğmesiyle elle de denetlenebilir.
+- clipdeck artık MIT lisanslı açık kaynak.
+
+**İyileştirmeler**
+- Dosya kopyalarının yolları okunurken her dosya için ayrı tampon ayrılmıyor; 260 karakteri aşan yollar da doğru okunuyor (testle doğrulandı).
+
 ## 0.3.0 — 2026-10-06
 
 **Yeni**

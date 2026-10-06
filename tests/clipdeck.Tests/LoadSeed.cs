@@ -66,19 +66,23 @@ public class LoadSeed(ITestOutputHelper output)
         output.WriteLine($"üretildi: {sw.Elapsed.TotalSeconds:0.0} sn, {new FileInfo(Path.Combine(dir, "gecmis.db")).Length / 1024 / 1024} MB");
     }
 
-    // A small, realistic history for screenshots (README and site).
+    // A small, realistic history for screenshots (README and site); CLIPDECK_DEMO_LANG=en writes it in English.
     // Run: set CLIPDECK_DEMO_DIR=... ; dotnet test --filter FullyQualifiedName~LoadSeed.DemoSeed
     [Fact]
     public void DemoSeed()
     {
         var dir = Environment.GetEnvironmentVariable("CLIPDECK_DEMO_DIR");
         if (string.IsNullOrEmpty(dir)) return;
+        bool en = Environment.GetEnvironmentVariable("CLIPDECK_DEMO_LANG") == "en";
+        string T(string tr, string english) => en ? english : tr;
         Directory.CreateDirectory(dir);
         var crypto = new Crypto(Path.Combine(dir, "anahtar.bin"));
         using var store = new ClipStore(Path.Combine(dir, "gecmis.db"), crypto);
         long now = TextUtil.Now();
         long Ago(double minutes) => now - (long)(minutes * 60_000);
-        var (png, thumb) = OnSta(DemoImage);
+        string title = T("Haftalık rapor — Ekim", "Weekly report — October"), subtitle = T("Satış +18%", "Sales +18%");
+        var (png, thumb) = OnSta(() => DemoImage(title, subtitle));
+        string notepad = T("Not Defteri", "Notepad");
 
         Insert(store, crypto, ClipKind.Text, Ago(0.2), text: "https://github.com/dotnet/wpf", app: "Google Chrome");
         Insert(store, crypto, ClipKind.Text, Ago(3), text: """
@@ -88,16 +92,25 @@ public class LoadSeed(ITestOutputHelper output)
                 return lines.Count(l => l.Length > 0);
             }
             """, app: "Visual Studio Code");
-        Insert(store, crypto, ClipKind.Image, Ago(9), png: png, thumb: thumb, width: 1280, height: 720, app: "Ekran Alıntısı Aracı",
-            ocr: "Haftalık rapor — Ekim\nSatış +18%");
+        Insert(store, crypto, ClipKind.Image, Ago(9), png: png, thumb: thumb, width: 1280, height: 720,
+            app: T("Ekran Alıntısı Aracı", "Snipping Tool"), ocr: title + "\n" + subtitle);
         Insert(store, crypto, ClipKind.Text, Ago(14), text: "#7C5CFF", app: "Figma");
-        Insert(store, crypto, ClipKind.Text, Ago(26), text: "Toplantı yarın 14:00'te, B salonunda. Sunumu ve bütçe tablosunu getirmeyi unutma.", app: "Not Defteri");
-        Insert(store, crypto, ClipKind.Files, Ago(41), files: [@"C:\Belgeler\Sunum.pptx", @"C:\Belgeler\Bütçe 2026.xlsx"], app: "Windows Gezgini");
-        Insert(store, crypto, ClipKind.Text, Ago(65), text: "4111 1111 1111 1111", app: "Not Defteri");
-        Insert(store, crypto, ClipKind.Text, Ago(130), text: """{ "ad": "clipdeck", "sürüm": "0.3.0", "platform": "windows" }""", app: "Visual Studio Code");
-        Insert(store, crypto, ClipKind.Text, Ago(300), text: "Kargo takip no: TR 4821 0937 55", app: "Google Chrome", pinned: true);
-        Insert(store, crypto, ClipKind.Text, Ago(1), text: "Saygılarımla,\nAli Yılmaz\n{tarih}", snippet: true, title: "E-posta imzası");
-        Insert(store, crypto, ClipKind.Text, Ago(2), text: "Merhaba {imleç},\n\nToplantı notlarını ekte bulabilirsin.", snippet: true, title: "Toplantı notu");
+        Insert(store, crypto, ClipKind.Text, Ago(26), app: notepad, text: T(
+            "Toplantı yarın 14:00'te, B salonunda. Sunumu ve bütçe tablosunu getirmeyi unutma.",
+            "Meeting tomorrow at 2 pm in room B. Don't forget the slides and the budget sheet."));
+        Insert(store, crypto, ClipKind.Files, Ago(41), app: T("Windows Gezgini", "File Explorer"), files: en
+            ? [@"C:\Documents\Slides.pptx", @"C:\Documents\Budget 2026.xlsx"]
+            : [@"C:\Belgeler\Sunum.pptx", @"C:\Belgeler\Bütçe 2026.xlsx"]);
+        Insert(store, crypto, ClipKind.Text, Ago(65), text: "4111 1111 1111 1111", app: notepad);
+        Insert(store, crypto, ClipKind.Text, Ago(130), app: "Visual Studio Code", text: T(
+            """{ "ad": "clipdeck", "sürüm": "0.4.0", "platform": "windows" }""",
+            """{ "name": "clipdeck", "version": "0.4.0", "platform": "windows" }"""));
+        Insert(store, crypto, ClipKind.Text, Ago(300), app: "Google Chrome", pinned: true,
+            text: T("Kargo takip no: TR 4821 0937 55", "Tracking number: 1Z 999 AA1 01 2345 6784"));
+        Insert(store, crypto, ClipKind.Text, Ago(1), snippet: true, title: T("E-posta imzası", "Email signature"),
+            text: T("Saygılarımla,\nAli Yılmaz\n{tarih}", "Best regards,\nAlex Taylor\n{date}"));
+        Insert(store, crypto, ClipKind.Text, Ago(2), snippet: true, title: T("Toplantı notu", "Meeting note"),
+            text: T("Merhaba {imleç},\n\nToplantı notlarını ekte bulabilirsin.", "Hi {cursor},\n\nThe meeting notes are attached."));
         output.WriteLine("tanıtım verisi hazır: " + dir);
     }
 
@@ -118,7 +131,7 @@ public class LoadSeed(ITestOutputHelper output)
     }
 
     // A simple bar chart, so the image card and OCR preview have something real to show.
-    static (byte[] png, byte[] thumb) DemoImage()
+    static (byte[] png, byte[] thumb) DemoImage(string title, string subtitle)
     {
         const int w = 1280, h = 720;
         var visual = new DrawingVisual();
@@ -126,9 +139,9 @@ public class LoadSeed(ITestOutputHelper output)
         {
             dc.DrawRectangle(new LinearGradientBrush(Color.FromRgb(0x1E, 0x29, 0x4B), Color.FromRgb(0x3B, 0x2A, 0x6E), 30), null, new System.Windows.Rect(0, 0, w, h));
             var face = new Typeface("Segoe UI Semibold");
-            dc.DrawText(new FormattedText("Haftalık rapor — Ekim", System.Globalization.CultureInfo.InvariantCulture,
+            dc.DrawText(new FormattedText(title, System.Globalization.CultureInfo.InvariantCulture,
                 System.Windows.FlowDirection.LeftToRight, face, 64, Brushes.White, 1.0), new System.Windows.Point(80, 70));
-            dc.DrawText(new FormattedText("Satış +18%", System.Globalization.CultureInfo.InvariantCulture,
+            dc.DrawText(new FormattedText(subtitle, System.Globalization.CultureInfo.InvariantCulture,
                 System.Windows.FlowDirection.LeftToRight, face, 40, new SolidColorBrush(Color.FromRgb(0x9E, 0xF0, 0xB8)), 1.0), new System.Windows.Point(80, 160));
             int[] bars = [180, 240, 210, 300, 280, 360, 420];
             for (int i = 0; i < bars.Length; i++)

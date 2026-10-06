@@ -55,6 +55,12 @@
                         <CheckBox x:Name="MoveUsedToTop" Content="{ui:T 'Yapıştırdığım öğeyi listenin en üstüne taşı'}"/>
                         <CheckBox x:Name="RunAsAdmin" Content="{ui:T 'Yönetici olarak çalıştır'}"/>
                         <TextBlock Style="{StaticResource Note}" Text="{ui:T 'Yönetici olarak açılmış programlara da yapıştırabilmek için. Açılışta UAC onayı istenir; otomatik başlatma zamanlanmış görevle, onaysız yapılır.'}"/>
+                        <DockPanel LastChildFill="False">
+                            <CheckBox x:Name="CheckUpdates" Content="{ui:T 'Yeni sürümleri denetle'}" VerticalAlignment="Center"/>
+                            <Button x:Name="CheckNowButton" DockPanel.Dock="Right" Style="{StaticResource DialogButton}" Content="{ui:T 'Şimdi denetle'}"
+                                    MinWidth="0" Padding="10,3,10,3" VerticalAlignment="Center" Click="CheckNow_Click"/>
+                        </DockPanel>
+                        <TextBlock Style="{StaticResource Note}" Text="{ui:T 'Açıksa günde bir kez GitHub\'dan yalnızca en son sürümün numarasını okur; senden hiçbir bilgi gönderilmez.'}"/>
                         <StackPanel Orientation="Horizontal" Margin="0,6,0,4">
                             <TextBlock Style="{StaticResource Label}" Text="{ui:T Dil}"/>
                             <RadioButton x:Name="LangTr" Style="{StaticResource TabButton}" Content="Türkçe" GroupName="SettingsLang"/>
@@ -127,13 +133,13 @@
                         <DockPanel Margin="0,0,0,6">
                             <TextBlock Style="{StaticResource Label}" Text="{ui:T Karartma}"/>
                             <TextBlock DockPanel.Dock="Right" Style="{StaticResource Value}" Width="46"
-                                       Text="{Binding Value, ElementName=DimSlider, StringFormat='%{0:0}'}"/>
+                                       Text="{Binding Value, ElementName=DimSlider, StringFormat={ui:T '%{0:0}'}}"/>
                             <Slider x:Name="DimSlider" Minimum="0" Maximum="90" ValueChanged="Appearance_Changed"/>
                         </DockPanel>
                         <DockPanel Margin="0,0,0,6">
                             <TextBlock Style="{StaticResource Label}" Text="{ui:T 'Kart opaklığı'}"/>
                             <TextBlock DockPanel.Dock="Right" Style="{StaticResource Value}" Width="46"
-                                       Text="{Binding Value, ElementName=CardSlider, StringFormat='%{0:0}'}"/>
+                                       Text="{Binding Value, ElementName=CardSlider, StringFormat={ui:T '%{0:0}'}}"/>
                             <Slider x:Name="CardSlider" Minimum="20" Maximum="100" ValueChanged="Appearance_Changed"/>
                         </DockPanel>
                         <DockPanel Margin="0,0,0,6">

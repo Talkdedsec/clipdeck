@@ -50,6 +50,7 @@ public partial class SettingsWindow : Window
         StartWithWindows.IsChecked = s.StartWithWindows;
         MoveUsedToTop.IsChecked = s.MoveUsedToTop;
         RunAsAdmin.IsChecked = s.RunAsAdmin;
+        CheckUpdates.IsChecked = s.CheckUpdates;
         (s.Language == "en" ? LangEn : LangTr).IsChecked = true;
         CaptureImages.IsChecked = s.CaptureImages;
         AutoOcr.IsChecked = s.AutoOcr;
@@ -310,6 +311,7 @@ public partial class SettingsWindow : Window
         s.StartWithWindows = StartWithWindows.IsChecked == true;
         s.MoveUsedToTop = MoveUsedToTop.IsChecked == true;
         s.RunAsAdmin = RunAsAdmin.IsChecked == true;
+        s.CheckUpdates = CheckUpdates.IsChecked == true;
         s.Language = LangEn.IsChecked == true ? "en" : "tr";
         s.CaptureImages = CaptureImages.IsChecked == true;
         s.AutoOcr = AutoOcr.IsChecked == true;
@@ -388,6 +390,37 @@ public partial class SettingsWindow : Window
             Log.Error("arka plan kaydı", ex);
             Warn(Loc.T("Fotoğraf kaydedilemedi: ") + ex.Message);
             return false;
+        }
+    }
+
+    async void CheckNow_Click(object sender, RoutedEventArgs e)
+    {
+        CheckNowButton.IsEnabled = false;
+        CheckNowButton.Content = Loc.T("Denetleniyor…");
+        try
+        {
+            var info = await UpdateChecker.CheckAsync();
+            if (info is null)
+            {
+                MessageBox.Show(this, Loc.F("clipdeck güncel ({0}).", UpdateChecker.Current.ToString(3)), "clipdeck",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            AppRef.AnnounceUpdate(info);
+            var answer = MessageBox.Show(this,
+                Loc.F("clipdeck {0} çıktı; sen {1} kullanıyorsun. Sürüm sayfası açılsın mı?", info.Version.ToString(3), UpdateChecker.Current.ToString(3)),
+                "clipdeck", MessageBoxButton.YesNo, MessageBoxImage.Information);
+            if (answer == MessageBoxResult.Yes) Process.Start(new ProcessStartInfo(info.Url) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            Log.Write("güncelleme denetlenemedi: " + ex.Message);
+            Warn(Loc.T("Güncelleme denetlenemedi: ") + ex.Message);
+        }
+        finally
+        {
+            CheckNowButton.IsEnabled = true;
+            CheckNowButton.Content = Loc.T("Şimdi denetle");
         }
     }
 

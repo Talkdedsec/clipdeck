@@ -12,9 +12,12 @@
     <RootNamespace>ClipDeck</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\clipdeck.ico</ApplicationIcon>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Product>clipdeck</Product>
     <Description>clipdeck - pano gecmisi</Description>
+    <Copyright>Copyright (c) 2026 Talkdedsec</Copyright>
+    <RepositoryUrl>https://github.com/Talkdedsec/clipdeck</RepositoryUrl>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <NoWarn>$(NoWarn);WFO0003</NoWarn>
     <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
   </PropertyGroup>

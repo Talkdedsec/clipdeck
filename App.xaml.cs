@@ -139,7 +139,11 @@ public partial class App : Application
 
         // Age-based cleanup has to run even when nothing new is copied for days.
         _housekeeping = new DispatcherTimer { Interval = TimeSpan.FromHours(1) };
-        _housekeeping.Tick += (_, _) => Manager.Trim();
+        _housekeeping.Tick += (_, _) =>
+        {
+            Manager.Trim();
+            _ = CheckForUpdatesAsync();
+        };
         _housekeeping.Start();
 
         var startup = DateTime.Now - Process.GetCurrentProcess().StartTime;
@@ -167,7 +171,39 @@ public partial class App : Application
             {
                 Log.Error("bölüm verisi", ex);
             }
+            // Kept off the start-up path; the network is touched only if the user turned the check on.
+            await Task.Delay(TimeSpan.FromMinutes(1));
+            await CheckForUpdatesAsync();
         });
+    }
+
+    // Once a day at most, and only when enabled. Each new version is announced with one balloon; the tray menu keeps a link.
+    async Task CheckForUpdatesAsync()
+    {
+        if (!Settings.CheckUpdates || _exiting) return;
+        long now = TextUtil.Now();
+        if (now - Settings.LastUpdateCheck < 20 * 3_600_000L) return;
+        try
+        {
+            var info = await UpdateChecker.CheckAsync();
+            Settings.LastUpdateCheck = now;
+            if (info is not null) AnnounceUpdate(info);
+            SaveSettings();
+        }
+        catch (Exception ex)
+        {
+            Log.Write("güncelleme denetlenemedi: " + ex.Message);
+        }
+    }
+
+    internal void AnnounceUpdate(UpdateInfo info)
+    {
+        Tray?.SetUpdate(info);
+        var version = info.Version.ToString(3);
+        if (Settings.NotifiedVersion == version) return;
+        Settings.NotifiedVersion = version;
+        SaveSettings();
+        Tray?.Balloon(Loc.F("clipdeck {0} çıktı", version), Loc.T("İndirmek için tıkla."), info.Url);
     }
 
     bool AcquireSingleInstance(string[] args)
@@ -355,6 +391,7 @@ public partial class App : Application
         Theme.Apply(Settings);
         if (ClipItem.MaskSensitive != (Settings.SensitiveMode == "mask")) Manager.Load();
         Manager.Trim();
+        _ = CheckForUpdatesAsync();
     }
 
     // Admin mode runs schtasks.exe, which takes a moment; keep it off the UI thread.
