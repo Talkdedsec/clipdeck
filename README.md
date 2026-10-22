@@ -194,3 +194,7 @@ Compared with the built-in Win+V (25 items, cleared on restart except pinned one
 **Build:** `dotnet build`, `dotnet test tests\clipdeck.Tests\clipdeck.Tests.csproj`, `.\build.ps1`.
 
 **License:** [MIT](LICENSE).
+
+<p align="center">
+  <sub>Built by <a href="https://talkdedsec.com">Talkdedsec</a></sub>
+</p>
