@@ -204,6 +204,30 @@
     html { scroll-behavior: auto; }
     .btn { transition: none; }
   }
+  .dene-ic { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 48px; align-items: center; }
+  .hedef-lbl { display: block; margin: 26px 0 8px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); }
+  #hedef { width: 100%; resize: vertical; padding: 14px; border-radius: 12px; border: 1px solid var(--card-line); background: var(--card); color: var(--text); font: inherit; outline: 0; }
+  #hedef:focus { border-color: var(--accent); }
+  .panel { border: 1px solid var(--card-line); border-radius: 18px; background: linear-gradient(160deg, rgba(155,135,255,.12), rgba(0,180,160,.05)), var(--bg-2); box-shadow: 0 40px 90px -40px rgba(155,135,255,.5); padding: 14px; backdrop-filter: blur(12px); }
+  .panel-bas { display: flex; align-items: center; gap: 8px; font-weight: 700; padding: 4px 4px 12px; }
+  .panel-bas kbd { margin-left: auto; font: 500 11px ui-monospace, Consolas, monospace; padding: 2px 7px; border: 1px solid var(--card-line); border-radius: 6px; color: var(--dim); }
+  .panel-bas kbd + kbd { margin-left: 0; }
+  .logo-k { width: 14px; height: 14px; border-radius: 4px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); }
+  .ara { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--card-line); background: rgba(0,0,0,.25); color: var(--text); font: inherit; outline: 0; margin-bottom: 10px; }
+  .kayitlar { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 300px; overflow: auto; }
+  .kayitlar li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: var(--card); border: 1px solid transparent; cursor: pointer; animation: dusus .45s cubic-bezier(.34,1.56,.64,1); }
+  .kayitlar li:hover, .kayitlar li:focus-visible { border-color: var(--accent); outline: 0; }
+  .kayitlar .m { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; }
+  .kayitlar .z { grid-column: 1; font-size: 11px; color: var(--dim); }
+  .kayitlar .pin { grid-row: 1 / span 2; grid-column: 2; background: none; border: 0; color: var(--dim); cursor: pointer; font-size: 14px; padding: 4px; }
+  .kayitlar li.sabit .pin { color: var(--warm); }
+  .kayitlar .renk { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  @keyframes dusus { from { opacity: 0; transform: translateY(-10px) scale(.97); } }
+  .emoji { display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--card-line); }
+  .emoji button { background: none; border: 0; font-size: 20px; padding: 4px; border-radius: 8px; cursor: pointer; }
+  .emoji button:hover { background: var(--card); }
+  @media (max-width: 860px) { .dene-ic { grid-template-columns: minmax(0, 1fr); } }
+  @media (prefers-reduced-motion: reduce) { .kayitlar li { animation: none; } }
 </style>
 </head>
 <body>
@@ -255,6 +279,25 @@
       <div class="video-frame">
         <video id="demo-video" src="img/demo.mp4" data-en-src="img/en/demo.mp4" poster="img/demo-poster.jpg" data-en-poster="img/en/demo-poster.jpg"
                width="1204" height="792" autoplay muted loop playsinline preload="metadata" aria-label="clipdeck tanıtım videosu"></video>
+      </div>
+    </div>
+  </section>
+
+  <section id="dene" class="dene">
+    <div class="wrap dene-ic">
+      <div>
+        <h2 data-en="Copy anything on this page">Bu sayfada bir şey kopyala</h2>
+        <p class="sub" data-en="Select any sentence above and press Ctrl+C. It lands in the panel, searchable and pinnable. Click an entry to paste it where the cursor is, the way clipdeck does it on Windows.">Yukarıdan herhangi bir cümleyi seç, Ctrl+C’ye bas. Panele düşer; aranabilir, sabitlenebilir. Bir kayda tıkla, imlecin olduğu yere yapıştırsın; clipdeck’in Windows’ta yaptığı gibi.</p>
+        <label class="hedef-lbl" for="hedef" data-en="Cursor is here">İmleç burada</label>
+        <textarea id="hedef" rows="4" spellcheck="false" placeholder="…"></textarea>
+      </div>
+      <div class="panel" role="region" aria-label="clipdeck">
+        <div class="panel-bas"><span class="logo-k"></span>clipdeck<kbd>Win</kbd><kbd>V</kbd></div>
+        <input class="ara" type="search" placeholder="Ara…" data-en-ph="Search…" aria-label="Search">
+        <ul class="kayitlar" aria-live="polite"></ul>
+        <div class="emoji" aria-label="Emoji">
+          <button type="button">😀</button><button type="button">🔥</button><button type="button">✅</button><button type="button">👍</button><button type="button">🎉</button><button type="button">❤️</button><button type="button">😅</button><button type="button">🚀</button>
+        </div>
       </div>
     </div>
   </section>
@@ -478,6 +521,81 @@
     button.addEventListener("click", function () {
       apply(document.documentElement.lang === "en" ? "tr" : "en");
     });
+  })();
+</script>
+<script>
+  // A small clipdeck on the page: whatever the visitor copies lands here.
+  (function () {
+    var list = document.querySelector(".kayitlar");
+    if (!list) return;
+    var search = document.querySelector(".ara"), target = document.getElementById("hedef");
+    var en = function () { return document.documentElement.lang === "en"; };
+    var items = [
+      { t: "#9b87ff", at: Date.now() - 4 * 60000, pin: false },
+      { t: "https://github.com/Talkdedsec/clipdeck", at: Date.now() - 18 * 60000, pin: true },
+      { t: "Toplantı 14:30'da, oda 3", en: "Meeting at 14:30, room 3", at: Date.now() - 62 * 60000, pin: false }
+    ];
+    function ago(ms) {
+      var m = Math.round((Date.now() - ms) / 60000);
+      if (m < 1) return en() ? "just now" : "az önce";
+      if (m < 60) return en() ? m + " min ago" : m + " dk önce";
+      return en() ? Math.round(m / 60) + " h ago" : Math.round(m / 60) + " sa önce";
+    }
+    function text(it) { return en() && it.en ? it.en : it.t; }
+    function render() {
+      var q = search.value.trim().toLocaleLowerCase();
+      var shown = items.filter(function (it) { return !q || text(it).toLocaleLowerCase().indexOf(q) !== -1; })
+        .sort(function (a, b) { return (b.pin - a.pin) || (b.at - a.at); });
+      list.innerHTML = "";
+      shown.forEach(function (it) {
+        var li = document.createElement("li");
+        li.tabIndex = 0;
+        if (it.pin) li.className = "sabit";
+        var m = document.createElement("span");
+        m.className = "m";
+        if (/^#[0-9a-f]{6}$/i.test(it.t)) {
+          var sw = document.createElement("span");
+          sw.className = "renk"; sw.style.background = it.t; m.append(sw);
+        }
+        m.append(text(it));
+        var z = document.createElement("span");
+        z.className = "z"; z.textContent = ago(it.at);
+        var pin = document.createElement("button");
+        pin.type = "button"; pin.className = "pin"; pin.textContent = it.pin ? "★" : "☆";
+        pin.setAttribute("aria-label", en() ? "Pin" : "Sabitle");
+        pin.addEventListener("click", function (e) { e.stopPropagation(); it.pin = !it.pin; render(); });
+        li.append(m, pin, z);
+        var paste = function () { insert(text(it)); it.at = Date.now(); render(); };
+        li.addEventListener("click", paste);
+        li.addEventListener("keydown", function (e) { if (e.key === "Enter") paste(); });
+        list.append(li);
+      });
+    }
+    function insert(s) {
+      var a = target.selectionStart || 0, b = target.selectionEnd || 0;
+      target.value = target.value.slice(0, a) + s + target.value.slice(b);
+      target.focus();
+      target.selectionStart = target.selectionEnd = a + s.length;
+    }
+    document.addEventListener("copy", function () {
+      var s = String(document.getSelection() || "").trim();
+      if (!s) return;
+      if (s.length > 160) s = s.slice(0, 157) + "…";
+      items = items.filter(function (it) { return it.t !== s; });
+      items.push({ t: s, at: Date.now(), pin: false });
+      search.value = "";
+      render();
+    });
+    search.addEventListener("input", render);
+    document.querySelectorAll(".emoji button").forEach(function (b) {
+      b.addEventListener("click", function () { insert(b.textContent); });
+    });
+    new MutationObserver(function () {
+      search.placeholder = en() ? search.dataset.enPh : "Ara…";
+      render();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+    search.placeholder = en() ? search.dataset.enPh : "Ara…";
+    render();
   })();
 </script>
 </body>
